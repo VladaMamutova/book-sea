@@ -1,0 +1,22 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11.5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  books:
+    build: ./books-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/books-service
+    ports:
+      - 8180:8180
+    depends_on:
+      - postgres
+
+volumes:
+  postgres:
