@@ -1,6 +1,8 @@
 require 'securerandom'
 
 class BooksController < ApplicationController
+  before_action :set_book, only: %i[show]
+
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
 
@@ -13,7 +15,7 @@ class BooksController < ApplicationController
   end
 
   def create
-    # todo: check for nil, validations
+    # TODO: check for nil, validations
     author = Author.find_by(author_params)
     genre = Genre.find_by(name: genre_params[:genre])
 
@@ -27,7 +29,17 @@ class BooksController < ApplicationController
     render json: @book, each_serializer: BookSerializer, status: :created
   end
 
+  def show
+    return head :not_found unless @book
+
+    render json: @book, serializer: BookSerializer
+  end
+
   private
+
+  def set_book
+    @book = Book.find_by(book_uid: params[:id]) # nil if not found
+  end
 
   # only allow a list of trusted parameters through
   def book_params
