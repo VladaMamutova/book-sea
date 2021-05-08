@@ -9,6 +9,8 @@ class BooksController < ApplicationController
   def index
     if params[:author_id] # /authors/{author_uid}/books
       @author = Author.find_by(author_uid: params[:author_id])
+      raise ActiveRecord::RecordNotFound, "Author '#{params[:author_id]}' not found" unless @author
+
       render json: @author, serializer: AuthorWithBooksSerializer
     else # /books
       page = params[:page].to_i
@@ -20,14 +22,18 @@ class BooksController < ApplicationController
   end
 
   def create
-    # TODO: check for nil, validations
     author = Author.find_by(author_params)
+    raise ActiveRecord::RecordNotFound, "Author (#{params_to_string(author_params)}) not found" unless author
+
     genre = Genre.find_by(name: genre_params[:genre])
+    raise ActiveRecord::RecordNotFound, "Genre '#{genre_params[:genre]}' not found" unless genre
 
     @book = Book.new(book_params)
     @book.author = author
     @book.genre = genre
     @book.book_uid = SecureRandom.uuid
+
+    raise Error::RecordInvalid, @book.errors unless @book.valid?
 
     @book.save
 
@@ -35,8 +41,6 @@ class BooksController < ApplicationController
   end
 
   def show
-    return head :not_found unless @book
-
     render json: @book, serializer: BookSerializer
   end
 
@@ -44,6 +48,7 @@ class BooksController < ApplicationController
 
   def set_book
     @book = Book.find_by(book_uid: params[:id]) # nil if not found
+    raise ActiveRecord::RecordNotFound, "Book '#{params[:id]}' not found" unless @book
   end
 
   # only allow a list of trusted parameters through
@@ -52,10 +57,15 @@ class BooksController < ApplicationController
   end
 
   def author_params
-    params.require(:author).permit(:first_name, :last_name)
+    params.require(:author).permit(:first_name, :last_name, :middle_name)
   end
 
   def genre_params
     params.permit(:genre)
+  end
+
+  def params_to_string(params)
+    hash = params.to_h
+    hash.map { |key, value| "#{key.gsub('_', ' ')}: '#{value}'" }.join(', ')
   end
 end
