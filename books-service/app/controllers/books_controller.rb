@@ -7,11 +7,16 @@ class BooksController < ApplicationController
   protect_from_forgery with: :null_session
 
   def index
-    page = params[:page].to_i
-    per_page = params[:per_page] ? params[:per_page].to_i : 20
-    @books = Book.limit(per_page).offset(page * per_page)
+    if params[:author_id] # /authors/{author_uid}/books
+      @author = Author.find_by(author_uid: params[:author_id])
+      render json: @author, serializer: AuthorWithBooksSerializer
+    else # /books
+      page = params[:page].to_i
+      per_page = params[:per_page] ? params[:per_page].to_i : 20
 
-    render json: @books, each_serializer: BookSerializer
+      @books = Book.limit(per_page).offset(page * per_page)
+      render json: @books, each_serializer: BookSerializer
+    end
   end
 
   def create

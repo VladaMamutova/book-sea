@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_507_134_131) do
+ActiveRecord::Schema.define(version: 20_210_508_081_101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
   create_table 'authors', force: :cascade do |t|
-    t.string 'first_name'
-    t.string 'last_name'
-    t.uuid 'author_uid'
+    t.string 'first_name', null: false
+    t.string 'last_name', null: false
+    t.uuid 'author_uid', null: false
     t.string 'info'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
@@ -25,23 +25,22 @@ ActiveRecord::Schema.define(version: 20_210_507_134_131) do
   end
 
   create_table 'books', force: :cascade do |t|
-    t.string 'name'
-    t.uuid 'book_uid'
+    t.string 'name', null: false
+    t.uuid 'book_uid', null: false
     t.uuid 'libraries', default: [], array: true
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.bigint 'author_id', null: false
     t.bigint 'genre_id', null: false
-    t.index ['author_id'], name: 'index_books_on_author_id'
+    t.uuid 'author_uid', null: false
+    t.index ['author_uid'], name: 'index_books_on_author_uid'
     t.index ['genre_id'], name: 'index_books_on_genre_id'
   end
 
   create_table 'genres', force: :cascade do |t|
-    t.string 'name'
+    t.string 'name', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end
 
-  add_foreign_key 'books', 'authors'
   add_foreign_key 'books', 'genres'
 end
