@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "4b312aff-84cc-4a6c-868b-0bdc72e1aa38",
+		"name": "Book Sea",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books Service",
+			"item": [
+				{
+					"name": "[books] Get author info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get book info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Create book",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Юность\",\n    \"author\": {\n        \"first_name\": \"Лев\",\n        \"middle_name\": \"Николаевич\",\n        \"last_name\": \"Толстой\"\n    },\n    \"genre\": \"повесть\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get author with books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}/books",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
