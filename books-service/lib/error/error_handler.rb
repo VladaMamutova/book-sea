@@ -8,7 +8,7 @@ module Error
           respond(:internal_server_error, e.to_s)
         end
         rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
-        rescue_from RecordInvalid, with: :invalid_response
+        rescue_from ActiveRecord::RecordInvalid, with: :invalid_response
       end
     end
 
@@ -20,8 +20,8 @@ module Error
     end
 
     def invalid_response(error)
-      json = Helpers::Render.json(error.message, error.details.full_messages)
-      render json: json, status: :not_acceptable # 406
+      json = Helpers::Render.json('Validation failed', error.record.errors.full_messages)
+      render json: json, status: :bad_request # 400
     end
 
     def respond(status, message)

@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[show]
+  before_action :set_book, only: %i[show update destroy]
 
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
@@ -25,23 +25,48 @@ class BooksController < ApplicationController
     author = Author.find_by(author_params)
     raise ActiveRecord::RecordNotFound, "Author (#{params_to_string(author_params)}) not found" unless author
 
-    genre = Genre.find_by(name: genre_params[:genre])
-    raise ActiveRecord::RecordNotFound, "Genre '#{genre_params[:genre]}' not found" unless genre
+    genre = Genre.find_by(name: params[:genre])
+    raise ActiveRecord::RecordNotFound, "Genre '#{params[:genre]}' not found" unless genre
 
     @book = Book.new(book_params)
     @book.author = author
     @book.genre = genre
     @book.book_uid = SecureRandom.uuid
 
-    raise Error::RecordInvalid, @book.errors unless @book.valid?
+    @book.save!
 
-    @book.save
-
-    render json: @book, each_serializer: BookSerializer, status: :created
+    render json: @book, serializer: BookSerializer, status: :created, location: request.original_url + @book.book_uid
   end
 
   def show
     render json: @book, serializer: BookSerializer
+  end
+
+  def update
+    ActiveRecord::Base.transaction do
+      @book.update!(book_params) unless params[:book].empty?
+
+      if params[:author]
+        author = Author.find_by(author_params)
+        raise ActiveRecord::RecordNotFound, "Author (#{params_to_string(author_params)}) not found" unless author
+
+        @book.update!(author: author)
+      end
+
+      if params[:genre]
+        genre = Genre.find_by(name: params[:genre])
+        raise ActiveRecord::RecordNotFound, "Genre '#{params[:genre]}' not found" unless genre
+
+        @book.update!(genre: genre)
+      end
+    end
+
+    render json: @book, each_serializer: BookSerializer, status: :ok
+  end
+
+  def destroy
+    @book.destroy
+    head :no_content
   end
 
   private
@@ -58,10 +83,6 @@ class BooksController < ApplicationController
 
   def author_params
     params.require(:author).permit(:first_name, :last_name, :middle_name)
-  end
-
-  def genre_params
-    params.permit(:genre)
   end
 
   def params_to_string(params)
