@@ -70,6 +70,17 @@
 				},
 				{
 					"name": "[books] Create book",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -150,6 +161,141 @@
 							],
 							"path": [
 								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Update book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"genre\": \"роман\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Delete book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Create author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Михаил\",\n    \"middle_name\": \"Юрьевич\",\n    \"last_name\": \"Лермонтов\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Update author",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Михаил\",\n    \"info\": \"Русский поэт, прозаик, драматург, художник. Творчество Лермонтова, в котором сочетаются гражданские, философские и личные мотивы, отвечавшие насущным потребностям духовной жизни русского общества, ознаменовало собой новый расцвет русской литературы и оказало большое влияние на виднейших русских писателей и поэтов XIX и XX веков.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/3abf119c-4d80-4958-bc30-1ba9e23170b9",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"3abf119c-4d80-4958-bc30-1ba9e23170b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Delete author",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}"
 							]
 						}
 					},
