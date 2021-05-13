@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  host: postgres # такой же, как имя сервиса бд в docker-compose.yml
+  user: postgres
+  password: postgres
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: books_development
+
+test:
+  <<: *default
+  database: books_test
+
+production:
+  <<: *default
+  database: books_production
