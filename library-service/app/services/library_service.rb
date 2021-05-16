@@ -10,9 +10,8 @@ class LibraryService
     library_book
   end
 
-  def remove_library_book(library, book_uid)
-    library_book = get_library_book(library, book_uid)
-    available_count = library_book.nil? ? 0 : library_book.available_count
+  def remove_library_book(library_book)
+    available_count = library_book.available_count
     if available_count.positive?
       available_count = library_book.available_count - 1
       library_book.update(available_count: available_count)
@@ -21,19 +20,15 @@ class LibraryService
     available_count
   end
 
-  def take_library_book(library, book_uid)
-    library_book = get_library_book(library, book_uid)
+  def take_library_book(library_book)
+    available_count = library_book.available_count
+    raise Error::RecordNotAvailable, "Book '#{library_book.book_uid}' is not available" unless available_count.positive?
 
-    available_count = library_book.nil? ? 0 : library_book.available_count
-    raise StandardError, "Book '#{book_uid}' is not available" unless available_count.positive?
-
-    library_book.update(available_count: library_book.available_count - 1)
+    library_book.update(available_count: available_count - 1)
   end
 
-  def return_library_book(library, book_uid)
-    library_book = get_library_book(library, book_uid)
-    # use safe navigation (`&.`) to check for nil
-    library_book&.update(available_count: library_book.available_count + 1)
+  def return_library_book(library_book)
+    library_book.update(available_count: library_book.available_count + 1)
   end
 
   private
@@ -46,7 +41,7 @@ class LibraryService
   def create_library_book(library, book_uid)
     library.library_books.create(
       book_uid: book_uid,
-      available_count: 0
+      available_count: 1
     )
   end
 end

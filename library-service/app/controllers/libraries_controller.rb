@@ -1,9 +1,6 @@
 class LibrariesController < ApplicationController
-  before_action :set_library, only: %i[show add_book remove_book take_book return_book]
-
-  rescue_from StandardError, RuntimeError do |e|
-    render json: { "message": e.message }, status: :internal_server_error
-  end
+  before_action :set_library
+  before_action :set_library_book, only: %i[remove_book take_book return_book]
 
   protect_from_forgery with: :null_session
 
@@ -18,20 +15,20 @@ class LibrariesController < ApplicationController
   end
 
   def remove_book
-    available_count = LibraryService.new.remove_library_book(@library, params[:book_uid])
+    available_count = LibraryService.new.remove_library_book(@library_book)
 
     render json: { available_count: available_count }, status: :ok
   end
 
   def take_book
-    LibraryService.new.take_library_book(@library, params[:book_uid])
+    LibraryService.new.take_library_book(@library_book)
 
     head :ok # == render nothing: true, status: :ok
     # The head method can be used to send responses with ONLY headers to the browser.
   end
 
   def return_book
-    LibraryService.new.return_library_book(@library, params[:book_uid])
+    LibraryService.new.return_library_book(@library_book)
 
     head :ok
   end
@@ -41,5 +38,12 @@ class LibrariesController < ApplicationController
   def set_library
     @library = Library.find_by(library_uid: params[:library_uid]) # nil if not found
     raise ActiveRecord::RecordNotFound, "Library '#{params[:library_uid]}' not found" unless @library
+  end
+
+  def set_library_book
+    book_uid = params[:book_uid]
+    library_uid = params[:library_uid]
+    @library_book = @library.library_books.find_by(book_uid: book_uid) # nil if not found
+    raise ActiveRecord::RecordNotFound, "Book '#{book_uid}' not found for library '#{library_uid}'" unless @library_book
   end
 end
