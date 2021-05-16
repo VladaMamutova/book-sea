@@ -302,6 +302,214 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Library Service",
+			"item": [
+				{
+					"name": "[books] Add book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Remove book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library/{{library_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Take book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library/{{library_uid}}/book/{{book_uid}}/take",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"take"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Return book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library/{{library_uid}}/book/{{book_uid}}/return",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"return"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

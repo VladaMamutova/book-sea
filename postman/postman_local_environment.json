@@ -9,16 +9,26 @@
 		},
 		{
 			"key": "book_uid",
-			"value": "",
+			"value": "8d387f76-80cc-4e7d-8aa0-876b00cb27cd",
 			"enabled": true
 		},
 		{
 			"key": "author_uid",
-			"value": "",
+			"value": "414cea5a-a079-4769-a71b-45a9f336573c",
+			"enabled": true
+		},
+		{
+			"key": "library_url",
+			"value": "http://localhost:8280",
+			"enabled": true
+		},
+		{
+			"key": "library_uid",
+			"value": "90106878-b416-4c4d-947c-82bfb3304609",
 			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2021-05-11T20:32:53.974Z",
+	"_postman_exported_at": "2021-05-16T08:36:00.566Z",
 	"_postman_exported_using": "Postman/7.36.5"
 }
