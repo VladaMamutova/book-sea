@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_513_143_345) do
+ActiveRecord::Schema.define(version: 20_210_516_185_037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(version: 20_210_513_143_345) do
     t.datetime 'updated_at', precision: 6, null: false
     t.bigint 'library_id', null: false
     t.index ['library_id'], name: 'index_library_books_on_library_id'
+  end
+
+  create_table 'taken_books', force: :cascade do |t|
+    t.uuid 'taken_book_uid', null: false
+    t.uuid 'book_uid', null: false
+    t.uuid 'user_uid', null: false
+    t.integer 'status', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
   end
 
   add_foreign_key 'libraries', 'cities'

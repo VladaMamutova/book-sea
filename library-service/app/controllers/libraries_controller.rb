@@ -21,16 +21,22 @@ class LibrariesController < ApplicationController
   end
 
   def take_book
-    LibraryService.new.take_library_book(@library_book)
+    # todo: get user_uid from jwt token
+    user_uid = SecureRandom.uuid
+    taken_book = LibraryService.new.take_library_book(user_uid, @library_book)
 
-    head :ok # == render nothing: true, status: :ok
+    render json: taken_book, status: :ok
+    # head :ok # == render nothing: true, status: :ok
     # The head method can be used to send responses with ONLY headers to the browser.
   end
 
   def return_book
-    LibraryService.new.return_library_book(@library_book)
+    # todo: get user_uid from jwt token
+    user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
+    taken_book = LibraryService.new.return_library_book(user_uid, @library_book, params['status'])
 
-    head :ok
+    render json: taken_book, serializer: TakenBookSerializer, status: :ok
+    # head :ok
   end
 
   private
