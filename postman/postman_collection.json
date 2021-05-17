@@ -1,0 +1,602 @@
+{
+	"info": {
+		"_postman_id": "4b312aff-84cc-4a6c-868b-0bdc72e1aa38",
+		"name": "Book Sea",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books Service",
+			"item": [
+				{
+					"name": "[authors] Get author info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get book info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Create book",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Юность\",\n    \"author\": {\n        \"first_name\": \"Лев\",\n        \"middle_name\": \"Николаевич\",\n        \"last_name\": \"Толстой\"\n    },\n    \"genre\": \"повесть\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authors] Get author with books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}/books",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Update book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"genre\": \"роман\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Delete book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authors] Create author",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Михаил\",\n    \"middle_name\": \"Юрьевич\",\n    \"last_name\": \"Лермонтов\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authors] Update author",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Михаил\",\n    \"info\": \"Русский поэт, прозаик, драматург, художник. Творчество Лермонтова, в котором сочетаются гражданские, философские и личные мотивы, отвечавшие насущным потребностям духовной жизни русского общества, ознаменовало собой новый расцвет русской литературы и оказало большое влияние на виднейших русских писателей и поэтов XIX и XX веков.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/3abf119c-4d80-4958-bc30-1ba9e23170b9",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"3abf119c-4d80-4958-bc30-1ba9e23170b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authors] Delete author",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/authors/{{author_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"authors",
+								"{{author_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Library Service",
+			"item": [
+				{
+					"name": "[library_books] Add book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library_books] Remove book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[libraries] Get library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/libraries/{{library_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Take book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/take",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"take"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Return book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"used\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/return",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Get taken books",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Get user taken books",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books?user_uid={{user_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books"
+							],
+							"query": [
+								{
+									"key": "user_uid",
+									"value": "{{user_uid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

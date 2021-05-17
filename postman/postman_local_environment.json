@@ -1,0 +1,39 @@
+{
+	"id": "f5cc7bf0-1763-476f-9dda-f4607361d5e5",
+	"name": "[local] Book Sea",
+	"values": [
+		{
+			"key": "books_url",
+			"value": "http://localhost:8180",
+			"enabled": true
+		},
+		{
+			"key": "book_uid",
+			"value": "8d387f76-80cc-4e7d-8aa0-876b00cb27cd",
+			"enabled": true
+		},
+		{
+			"key": "author_uid",
+			"value": "414cea5a-a079-4769-a71b-45a9f336573c",
+			"enabled": true
+		},
+		{
+			"key": "library_url",
+			"value": "http://localhost:8280",
+			"enabled": true
+		},
+		{
+			"key": "library_uid",
+			"value": "90106878-b416-4c4d-947c-82bfb3304609",
+			"enabled": true
+		},
+		{
+			"key": "user_uid",
+			"value": "362c5679-48b8-4741-9dc1-44a7472f51f3",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-05-17T08:58:24.812Z",
+	"_postman_exported_using": "Postman/7.36.5"
+}
