@@ -3,10 +3,8 @@ class StatusValidator < ActiveModel::Validator
 
   def validate(record)
     @record = record
-    puts @status
     @status ||= @record.status
-    puts @status
-
+    
     if @status.blank?
       @record.errors.add(:status, message: "can't be blank")
     elsif not_a_status?
