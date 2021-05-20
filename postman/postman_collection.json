@@ -9,7 +9,7 @@
 			"name": "Books Service",
 			"item": [
 				{
-					"name": "[books] Get author info",
+					"name": "[authors] Get author info",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -107,7 +107,7 @@
 					"response": []
 				},
 				{
-					"name": "[books] Get author with books",
+					"name": "[authors] Get author with books",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -221,7 +221,7 @@
 					"response": []
 				},
 				{
-					"name": "[books] Create author",
+					"name": "[authors] Create author",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -248,7 +248,7 @@
 					"response": []
 				},
 				{
-					"name": "[books] Update author",
+					"name": "[authors] Update author",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -275,7 +275,7 @@
 					"response": []
 				},
 				{
-					"name": "[books] Delete author",
+					"name": "[authors] Delete author",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -296,6 +296,301 @@
 							"path": [
 								"authors",
 								"{{author_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Library Service",
+			"item": [
+				{
+					"name": "[library_books] Add book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library_books] Remove book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"library_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[libraries] Get library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/libraries/{{library_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Take book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/take",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"take"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Return book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"used\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/return",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Get taken books",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books/",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[taken_books] Get user taken books",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/taken_books?user_uid={{user_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"taken_books"
+							],
+							"query": [
+								{
+									"key": "user_uid",
+									"value": "{{user_uid}}"
+								}
 							]
 						}
 					},

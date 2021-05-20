@@ -18,5 +18,15 @@ services:
     depends_on:
       - postgres
 
+  library:
+    build: ./library-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/library-service
+    ports:
+      - 8280:8280
+    depends_on:
+      - postgres
+
 volumes:
   postgres:
