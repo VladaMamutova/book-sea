@@ -8,7 +8,7 @@ class JsonWebToken
     # and the type of encryption algorithm (HS256) encoded in base-64.
     # Payload contains information about the user and his or her role (login, password, user_uid)
     # Signature is a unique key that identifies the service which creates the header.
-    def encode(payload, exp = 1.minutes.from_now)
+    def encode(payload, exp = 30.minutes.from_now)
       payload[:exp] = exp.to_i
       # The signature of the token will be a base-64 encoded version
       # of the Rails application's secret key.

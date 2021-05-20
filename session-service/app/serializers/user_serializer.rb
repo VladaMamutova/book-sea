@@ -1,3 +1,3 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :login
+  attributes :login, :role
 end

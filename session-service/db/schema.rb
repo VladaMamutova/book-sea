@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_518_151_723) do
+ActiveRecord::Schema.define(version: 20_210_519_133_206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20_210_518_151_723) do
     t.uuid 'user_uid', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.integer 'role', null: false
     t.index ['login'], name: 'index_users_on_login', unique: true
     t.index ['user_uid'], name: 'index_users_on_user_uid', unique: true
   end
