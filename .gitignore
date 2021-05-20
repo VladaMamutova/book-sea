@@ -1,3 +1,4 @@
 /books-service/.gitignore
 /library-service/.gitignore
+/gateway-service/.gitignore
 /session-service/.gitignore
