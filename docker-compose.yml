@@ -28,5 +28,15 @@ services:
     depends_on:
       - postgres
 
+  session:
+    build: ./session-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/session-service
+    ports:
+      - 8680:8680
+    depends_on:
+      - postgres
+
 volumes:
   postgres:
