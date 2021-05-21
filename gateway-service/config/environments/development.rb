@@ -64,4 +64,8 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Services urls:
+  # Load with Rails.configuration.books_service_url
+  config.books_service_url = 'http://books:8180'
 end
