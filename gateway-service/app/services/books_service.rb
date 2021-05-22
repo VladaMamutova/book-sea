@@ -63,6 +63,26 @@ class BooksService
     raise e
   end
 
+  def add_book_to_library(book_uid, library_uid)
+    RestClient.post "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", {}
+  rescue RestClient::ExceptionWithResponse => e
+    # Специфические ошибки запроса будут обработаны в ErrorHandler,
+    # в общих случаях кидаем BooksProcessError.
+    raise Error::BooksProcessError, extract_message(e.response) if e.response.code != 404
+
+    raise e
+  end
+
+  def remove_book_from_library(book_uid, library_uid)
+    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}"
+  rescue RestClient::ExceptionWithResponse => e
+    # Специфические ошибки запроса будут обработаны в ErrorHandler,
+    # в общих случаях кидаем BooksProcessError.
+    raise Error::BooksProcessError, extract_message(e.response) if e.response.code != 404
+
+    raise e
+  end
+
   private
 
   def extract_message(response)

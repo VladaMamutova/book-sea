@@ -43,6 +43,21 @@ class GatewayController < ApplicationController
     head :no_content
   end
 
+  # POST /library/:library_uid/book/:book_uid
+  def add_book_to_library
+    available_count = params[:available_count].to_i
+    response = GatewayService.new.add_book_to_library(params[:book_uid], params[:library_uid], available_count)
+
+    render json: response, status: :ok
+  end
+
+  # DELETE /library/:library_uid/book/:book_uid
+  def remove_book_from_library
+    GatewayService.new.remove_book_from_library(params[:book_uid], params[:library_uid])
+
+    head :ok
+  end
+
   private
 
   def book_params

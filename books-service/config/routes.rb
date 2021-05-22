@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   resources :authors do
     resources :books
   end
+
+  post '/books/:id/:library_uid', to: 'books#add_book_to_library'
+  delete '/books/:id/:library_uid', to: 'books#remove_book_from_library'
 end

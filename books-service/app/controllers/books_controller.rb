@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[show update destroy]
+  before_action :set_book, only: %i[show update destroy add_book_to_library remove_book_from_library]
 
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
@@ -67,6 +67,24 @@ class BooksController < ApplicationController
   def destroy
     @book.destroy
     head :no_content
+  end
+
+  # POST /books/:book_uid/:library_uid
+  def add_book_to_library
+    library_uid = params[:library_uid]
+    libraries = @book.libraries
+    @book.update(libraries: (libraries << library_uid)) unless library_uid.in? libraries
+
+    head :ok
+  end
+
+  # DELETE /books/:book_uid/:library_uid
+  def remove_book_from_library
+    libraries = @book.libraries
+    libraries.delete(params[:library_uid])
+    @book.update(libraries: libraries)
+
+    head :ok
   end
 
   private

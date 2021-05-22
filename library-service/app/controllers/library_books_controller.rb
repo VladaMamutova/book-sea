@@ -5,15 +5,16 @@ class LibraryBooksController < ApplicationController
   protect_from_forgery with: :null_session
 
   def add_book
-    @library_book = LibraryBookService.new.add(@library, params[:book_uid])
+    book_uid = params[:book_uid]
+    available_count = params[:available_count].to_i
+    @library_book = LibraryBookService.new.add(@library, book_uid, available_count)
 
     render json: { available_count: @library_book.available_count }, status: :ok
   end
 
   def remove_book
-    available_count = LibraryBookService.new.remove(@library_book)
-
-    render json: { available_count: available_count }, status: :ok
+    @library_book.destroy
+    head :no_content
   end
 
   private
