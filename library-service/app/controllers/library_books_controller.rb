@@ -4,6 +4,14 @@ class LibraryBooksController < ApplicationController
 
   protect_from_forgery with: :null_session
 
+  # GET /libraries/:library_uid/books
+  def show_library_books
+    @library_books = @library.library_books
+
+    render json: @library_books, each_serializer: LibraryBookSerializer, status: :ok
+  end
+
+  # POST /libraries/:library_uid/book/:book_uid
   def add_book
     book_uid = params[:book_uid]
     available_count = params[:available_count].to_i
@@ -12,6 +20,7 @@ class LibraryBooksController < ApplicationController
     render json: { available_count: @library_book.available_count }, status: :ok
   end
 
+  # DELETE /libraries/:library_uid/book/:book_uid
   def remove_book
     @library_book.destroy
     head :no_content

@@ -61,7 +61,7 @@ class BooksController < ApplicationController
       end
     end
 
-    render json: @book, each_serializer: BookSerializer, status: :ok
+    render json: @book, serializer: BookSerializer, status: :ok
   end
 
   def destroy

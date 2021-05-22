@@ -43,6 +43,13 @@ class GatewayController < ApplicationController
     head :no_content
   end
 
+  # GET /library/:library_uid/books
+  def show_library_books
+    books = GatewayService.new.get_library_books(params[:library_uid])
+
+    render json: books, status: :ok
+  end
+
   # POST /library/:library_uid/book/:book_uid
   def add_book_to_library
     available_count = params[:available_count].to_i
@@ -56,6 +63,21 @@ class GatewayController < ApplicationController
     GatewayService.new.remove_book_from_library(params[:book_uid], params[:library_uid])
 
     head :ok
+  end
+
+  # POST /library/:library_uid/book/:book_uid/take
+  def take_book
+    taken_book = LibraryService.new.take_book_from_library(params[:book_uid], params[:library_uid])
+
+    render json: taken_book, status: :ok
+  end
+
+  # POST /library/:library_uid/book/:book_uid/return
+  def return_book
+    status = params[:status].to_s
+    taken_book = LibraryService.new.return_book_to_library(params[:book_uid], params[:library_uid], status)
+
+    render json: taken_book, status: :ok
   end
 
   private

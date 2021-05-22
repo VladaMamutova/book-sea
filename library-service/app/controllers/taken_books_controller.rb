@@ -22,6 +22,7 @@ class TakenBooksController < ApplicationController
     render json: @taken_books, each_serializer: TakenBookSerializer
   end
 
+  # POST libraries/:library_uid/book/:book_uid/take
   def take_book
     # todo: get user_uid from jwt token
     user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
@@ -30,19 +31,16 @@ class TakenBooksController < ApplicationController
     render json: taken_book, status: :ok
   end
 
+  # POST libraries/:library_uid/book/:book_uid/return
   def return_book
     # todo: get user_uid from jwt token
     user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
-    taken_book = TakenBookService.new.return(user_uid, @library_book, taken_book_params)
+    taken_book = TakenBookService.new.return(user_uid, @library_book, params[:status])
 
     render json: taken_book, status: :ok
   end
 
   private
-
-  def taken_book_params
-    params.require(:taken_book).permit(:status)
-  end
 
   def set_library
     @library = Library.find_by(library_uid: params[:library_uid]) # nil if not found

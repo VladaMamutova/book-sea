@@ -5,6 +5,7 @@ module ErrorHandler
     rescue_from StandardError, RuntimeError, with: :internal_server_error
     rescue_from Error::RecordInvalid, with: :bad_request
     rescue_from Error::RecordNotFound, with: :not_found
+    rescue_from Error::BookNotAvailable, with: :conflict
     rescue_from Error::BooksProcessError, Error::LibraryProcessError, with: :unprocessable_entity
 
     rescue_from RestClient::ExceptionWithResponse do |e|
@@ -38,6 +39,10 @@ module ErrorHandler
 
   def not_found(error)
     render json: { message: error.message }, status: :not_found # 404
+  end
+
+  def conflict(error)
+    render json: { message: error.message }, status: :conflict # 409
   end
 
   def unprocessable_entity(error)
