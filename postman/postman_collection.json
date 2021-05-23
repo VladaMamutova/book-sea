@@ -300,6 +300,122 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "[books]: Add book to library",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}/{{library_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}",
+								"{{library_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Remove book from library",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}/{{library_uid}}",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}",
+								"{{library_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get books by filter",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books?name=каренина&genre=Роман&author=Толстой&per_page=3",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "каренина"
+								},
+								{
+									"key": "genre",
+									"value": "Роман"
+								},
+								{
+									"key": "author",
+									"value": "Толстой"
+								},
+								{
+									"key": "per_page",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books] Get book libraries",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{books_url}}/books/{{book_uid}}/libraries",
+							"host": [
+								"{{books_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}",
+								"libraries"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -307,7 +423,7 @@
 			"name": "Library Service",
 			"item": [
 				{
-					"name": "[library_books] Add book to library",
+					"name": "[libraries] Add book to library",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -324,7 +440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"available_count\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,12 +448,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"raw": "{{library_url}}/libraries/{{library_uid}}/book/{{book_uid}}",
 							"host": [
 								"{{library_url}}"
 							],
 							"path": [
-								"library_books",
+								"libraries",
 								"{{library_uid}}",
 								"book",
 								"{{book_uid}}"
@@ -347,7 +463,7 @@
 					"response": []
 				},
 				{
-					"name": "[library_books] Remove book from library",
+					"name": "[libraries] Remove book from library",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -372,12 +488,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{library_url}}/library_books/{{library_uid}}/book/{{book_uid}}",
+							"raw": "{{library_url}}/libraries/{{library_uid}}/book/{{book_uid}}",
 							"host": [
 								"{{library_url}}"
 							],
 							"path": [
-								"library_books",
+								"libraries",
 								"{{library_uid}}",
 								"book",
 								"{{book_uid}}"
@@ -428,7 +544,7 @@
 					"response": []
 				},
 				{
-					"name": "[taken_books] Take book from library",
+					"name": "[libraries] Take book from library",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -453,12 +569,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/take",
+							"raw": "{{library_url}}/libraries/{{library_uid}}/book/{{book_uid}}/take",
 							"host": [
 								"{{library_url}}"
 							],
 							"path": [
-								"taken_books",
+								"libraries",
 								"{{library_uid}}",
 								"book",
 								"{{book_uid}}",
@@ -469,7 +585,7 @@
 					"response": []
 				},
 				{
-					"name": "[taken_books] Return book to library",
+					"name": "[libraries] Return book to library",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -494,12 +610,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{library_url}}/taken_books/{{library_uid}}/book/{{book_uid}}/return",
+							"raw": "{{library_url}}/libraries/{{library_uid}}/book/{{book_uid}}/return",
 							"host": [
 								"{{library_url}}"
 							],
 							"path": [
-								"taken_books",
+								"libraries",
 								"{{library_uid}}",
 								"book",
 								"{{book_uid}}",
@@ -591,6 +707,692 @@
 									"key": "user_uid",
 									"value": "{{user_uid}}"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[libraries] Get library books",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/libraries/{{library_uid}}/books",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_uid}}",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[libraries] Get library book info",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/libraries/{{library_uid}}/books/{{book_uid}}",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"libraries",
+								"{{library_uid}}",
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[libraries] Get libraries",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{library_url}}/libraries",
+							"host": [
+								"{{library_url}}"
+							],
+							"path": [
+								"libraries"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session Service",
+			"item": [
+				{
+					"name": "[authentification] Authentificate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "user",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/auth",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authentification] Verify",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3VpZCI6ImJjNDU4N2JmLWQxYmEtNGVjNC04MGRhLTgzZDgwNWI3NTMxOSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTYyMTQ5NTMwNH0.uA_E3Az2eHrAJMmDAVEdv4atjS5zHRDcUqvquNvuS64",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/verify",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[users] Get users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3VpZCI6ImJjNDU4N2JmLWQxYmEtNGVjNC04MGRhLTgzZDgwNWI3NTMxOSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTYyMTQ5NTMwNH0.uA_E3Az2eHrAJMmDAVEdv4atjS5zHRDcUqvquNvuS64",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/users",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[users] Create user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3VpZCI6ImJjNDU4N2JmLWQxYmEtNGVjNC04MGRhLTgzZDgwNWI3NTMxOSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTYyMTQ5NTMwNH0.uA_E3Az2eHrAJMmDAVEdv4atjS5zHRDcUqvquNvuS64",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"admin\",\n    \"password\": \"admin\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/users",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gateway Service",
+			"item": [
+				{
+					"name": "[books]: Get book info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/books/{{book_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Get author info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/author/{{author_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"author",
+								"{{author_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library]: Get library books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/library/{{library_uid}}/books",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Get author with books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/author/{{author_uid}}/books",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"author",
+								"{{author_uid}}",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Get books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/books/",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Get books by filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/books?name=каренина&genre=Роман&author=Толстой&per_page=3",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"books"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "каренина"
+								},
+								{
+									"key": "genre",
+									"value": "Роман"
+								},
+								{
+									"key": "author",
+									"value": "Толстой"
+								},
+								{
+									"key": "per_page",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library] Find book in libraries",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/library/book/{{book_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Add book",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Юность\",\n    \"author\": {\n        \"first_name\": \"Лев\",\n        \"middle_name\": \"Николаевич\",\n        \"last_name\": \"Толстой\"\n    },\n    \"genre\": \"повесть\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/books/",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"books",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[books]: Remove book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/books/{{book_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"books",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library]: Add book to library",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"available_count\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/library/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library]: Remove book from library",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}//library/{{library_uid}}/book/{{book_uid}}",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"",
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library] Take book from library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/library/{{library_uid}}/book/{{book_uid}}/take",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"take"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library] Return book to library",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"used\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/library/{{library_uid}}/book/{{book_uid}}/return",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"{{library_uid}}",
+								"book",
+								"{{book_uid}}",
+								"return"
 							]
 						}
 					},
