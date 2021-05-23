@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/author/:author_uid/books', to: 'gateway#show_author_with_books'
 
   get '/library/:library_uid/books', to: 'gateway#show_library_books'
+  get '/library/book/:book_uid', to: 'gateway#find_book_in_libraries'
   post '/library/:library_uid/book/:book_uid', to: 'gateway#add_book_to_library'
   delete '/library/:library_uid/book/:book_uid', to: 'gateway#remove_book_from_library'
   post '/library/:library_uid/book/:book_uid/take', to: 'gateway#take_book'

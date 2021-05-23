@@ -3,42 +3,42 @@ class GatewayController < ApplicationController
 
   # GET /books/:book_uid
   def show_book_info
-    book = BooksService.new.get_book_info(params[:book_uid])
+    book = BookService.new.get_book_info(params[:book_uid])
 
     render json: book, status: :ok
   end
 
   # GET /books
   def show_books
-    book = BooksService.new.get_books(params)
+    book = BookService.new.get_books(params)
 
     render json: book, status: :ok
   end
 
   # GET /author/:author_uid
   def show_author_info
-    author = BooksService.new.get_author_info(params[:author_uid])
+    author = BookService.new.get_author_info(params[:author_uid])
 
     render json: author, status: :ok
   end
 
   # GET /author/:author_uid/books
   def show_author_with_books
-    author = BooksService.new.get_author_with_books(params[:author_uid])
+    author = BookService.new.get_author_with_books(params[:author_uid])
 
     render json: author, status: :ok
   end
 
   # POST /books
   def add_book
-    book = BooksService.new.add_book(book_params)
+    book = BookService.new.add_book(book_params)
 
     render json: book, status: :created, location: request.original_url + book['book_uid']
   end
 
   # DELETE /books/:book_uid
   def remove_book
-    BooksService.new.remove_book(params[:book_uid])
+    BookService.new.remove_book(params[:book_uid])
 
     head :no_content
   end
@@ -78,6 +78,13 @@ class GatewayController < ApplicationController
     taken_book = LibraryService.new.return_book_to_library(params[:book_uid], params[:library_uid], status)
 
     render json: taken_book, status: :ok
+  end
+
+  # GET /library/book/:book_uid
+  def find_book_in_libraries
+    book_libraries = GatewayService.new.find_book_in_libraries(params[:book_uid])
+
+    render json: book_libraries, status: :ok
   end
 
   private

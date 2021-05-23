@@ -2,12 +2,13 @@ class LibraryService
   LIBRARY_SERVICE_URL = Rails.configuration.library_service_url
   private_constant :LIBRARY_SERVICE_URL
 
+  # Специфические ошибки запроса будут обработаны в ErrorHandler,
+  # в общих случаях кидаем LibraryProcessError.
+
   def get_library_books(library_uid)
     response = RestClient.get "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/books"
     JSON.parse(response.body)
   rescue RestClient::ExceptionWithResponse => e
-    # Специфические ошибки запроса будут обработаны в ErrorHandler,
-    # в общих случаях кидаем LibraryProcessError.
     raise Error::LibraryProcessError, extract_message(e.response) if e.response.code != 404
 
     raise e
@@ -19,8 +20,6 @@ class LibraryService
     response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   rescue RestClient::ExceptionWithResponse => e
-    # Специфические ошибки запроса будут обработаны в ErrorHandler,
-    # в общих случаях кидаем LibraryProcessError.
     raise Error::LibraryProcessError, extract_message(e.response) if e.response.code != 404
 
     raise e
@@ -29,8 +28,6 @@ class LibraryService
   def remove_book_from_library(book_uid, library_uid)
     RestClient.delete "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}"
   rescue RestClient::ExceptionWithResponse => e
-    # Специфические ошибки запроса будут обработаны в ErrorHandler,
-    # в общих случаях кидаем LibraryProcessError.
     raise Error::LibraryProcessError, extract_message(e.response) if e.response.code != 404
 
     raise e
@@ -41,8 +38,6 @@ class LibraryService
     response = RestClient.post url, {}, { accept: :json }
     JSON.parse(response.body)
   rescue RestClient::ExceptionWithResponse => e
-    # Специфические ошибки запроса будут обработаны в ErrorHandler,
-    # в общих случаях кидаем LibraryProcessError.
     raise Error::BookNotAvailable, extract_message(e.response) if e.response.code == 409
     raise Error::LibraryProcessError, extract_message(e.response) if e.response.code != 404
 
@@ -55,9 +50,17 @@ class LibraryService
     response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   rescue RestClient::ExceptionWithResponse => e
-    # Специфические ошибки запроса будут обработаны в ErrorHandler,
-    # в общих случаях кидаем LibraryProcessError.
     raise Error::LibraryProcessError, extract_message(e.response) if [400, 404].exclude? e.response.code
+
+    raise e
+  end
+
+  def get_library_book_info(library_uid, book_uid)
+    url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/books/#{book_uid}"
+    response = RestClient.get url, { accept: :json }
+    JSON.parse(response.body)
+  rescue RestClient::ExceptionWithResponse => e
+    raise Error::LibraryProcessError, extract_message(e.response) if e.response.code != 404
 
     raise e
   end

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :taken_books
 
   get '/libraries/:library_uid/books', to: 'library_books#show_library_books'
+  get '/libraries/:library_uid/books/:book_uid', to: 'library_books#show_library_book_info'
 
   post '/libraries/:library_uid/book/:book_uid', to: 'library_books#add_book'
   delete '/libraries/:library_uid/book/:book_uid', to: 'library_books#remove_book'

@@ -1,5 +1,5 @@
 class BookSerializer < ActiveModel::Serializer
-  attributes :book_uid, :name, :genre, :libraries
+  attributes :book_uid, :name, :genre
 
   belongs_to :author, serializer: AuthorShortSerializer
 

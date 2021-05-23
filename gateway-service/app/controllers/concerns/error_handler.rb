@@ -6,7 +6,7 @@ module ErrorHandler
     rescue_from Error::RecordInvalid, with: :bad_request
     rescue_from Error::RecordNotFound, with: :not_found
     rescue_from Error::BookNotAvailable, with: :conflict
-    rescue_from Error::BooksProcessError, Error::LibraryProcessError, with: :unprocessable_entity
+    rescue_from Error::BookProcessError, Error::LibraryProcessError, with: :unprocessable_entity
 
     rescue_from RestClient::ExceptionWithResponse do |e|
       response = JSON.parse(e.response.body)
