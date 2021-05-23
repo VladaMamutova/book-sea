@@ -1,19 +1,34 @@
 class LibraryBooksController < ApplicationController
   before_action :set_library
-  before_action :set_library_book, only: %i[remove_book]
+  before_action :set_library_book, only: %i[show_library_book_info remove_book]
 
   protect_from_forgery with: :null_session
 
+  # GET /libraries/:library_uid/books
+  def show_library_books
+    @library_books = @library.library_books
+
+    render json: @library_books, each_serializer: LibraryBookSerializer, status: :ok
+  end
+
+  # GET /libraries/:library_uid/book/:book_uid
+  def show_library_book_info
+    render json: @library_book, serializer: LibraryBookWithLibrarySerializer, status: :ok
+  end
+
+  # POST /libraries/:library_uid/book/:book_uid
   def add_book
-    @library_book = LibraryBookService.new.add(@library, params[:book_uid])
+    book_uid = params[:book_uid]
+    available_count = params[:available_count].to_i
+    @library_book = LibraryBookService.new.add(@library, book_uid, available_count)
 
     render json: { available_count: @library_book.available_count }, status: :ok
   end
 
+  # DELETE /libraries/:library_uid/book/:book_uid
   def remove_book
-    available_count = LibraryBookService.new.remove(@library_book)
-
-    render json: { available_count: available_count }, status: :ok
+    @library_book.destroy
+    head :no_content
   end
 
   private

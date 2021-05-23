@@ -28,6 +28,14 @@ services:
     depends_on:
       - postgres
 
+  gateway:
+    build: ./gateway-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/gateway-service
+    ports:
+      - 8580:8580
+
   session:
     build: ./session-service
     volumes:

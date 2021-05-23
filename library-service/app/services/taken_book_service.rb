@@ -16,13 +16,15 @@ class TakenBookService
     end
   end
 
-  def return(user_uid, library_book, taken_book_params)
+  def return(user_uid, library_book, status)
     ActiveRecord::Base.transaction do
       book_uid = library_book.book_uid
       taken_book = TakenBook.find_by(user_uid: user_uid, book_uid: book_uid, status: 'new')
-      raise ActiveRecord::RecordNotFound, "Taken Book '#{book_uid}' not found for user '#{user_uid}'" unless taken_book
+      unless taken_book
+        raise ActiveRecord::RecordNotFound,
+              "Taken Book (book_uid: '#{book_uid}', status: 'new') not found for user '#{user_uid}'"
+      end
 
-      status = taken_book_params[:status]
       raise ActiveRecord::RecordInvalid, taken_book unless StatusValidator.new.validate_status(taken_book, status)
 
       taken_book.update!(status: status)

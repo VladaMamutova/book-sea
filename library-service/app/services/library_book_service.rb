@@ -1,23 +1,13 @@
 class LibraryBookService
-  def add(library, book_uid)
+  def add(library, book_uid, available_count)
     library_book = get_library_book(library, book_uid)
     if library_book.present?
-      library_book.update(available_count: library_book.available_count + 1)
+      library_book.update!(available_count: library_book.available_count + available_count)
     else
-      library_book = create_library_book(library, book_uid)
+      library_book = create_library_book(library, book_uid, available_count)
     end
 
     library_book
-  end
-
-  def remove(library_book)
-    available_count = library_book.available_count
-    if available_count.positive?
-      available_count = library_book.available_count - 1
-      library_book.update(available_count: available_count)
-    end
-
-    available_count
   end
 
   private
@@ -27,10 +17,10 @@ class LibraryBookService
     # == LibraryBook.find_by(library_id: library.id, book_uid: book_uid)
   end
 
-  def create_library_book(library, book_uid)
-    library.library_books.create(
+  def create_library_book(library, book_uid, available_count)
+    library.library_books.create!(
       book_uid: book_uid,
-      available_count: 1
+      available_count: available_count
     )
   end
 end

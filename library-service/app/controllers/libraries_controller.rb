@@ -1,7 +1,13 @@
 class LibrariesController < ApplicationController
-  before_action :set_library
+  before_action :set_library, only: :show
 
   protect_from_forgery with: :null_session
+
+  def index
+    @libraries = Library.all
+
+    render json: @libraries, each_serializer: LibrarySerializer, status: :ok
+  end
 
   def show
     render json: @library

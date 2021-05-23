@@ -37,5 +37,8 @@ module Src
 
     # include ErrorHandler
     config.autoload_paths += %W[#{config.root}/lib]
+
+    # allow to access service url
+    config.hosts << 'library'
   end
 end

@@ -1,5 +1,5 @@
 class LibrarySerializer < ActiveModel::Serializer
-  attributes :name, :address, :city
+  attributes :library_uid, :name, :address, :city
 
   def city
     object.city.name

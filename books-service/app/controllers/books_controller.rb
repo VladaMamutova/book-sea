@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[show update destroy]
+  before_action :set_book, except: %i[index create]
 
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
@@ -13,10 +13,7 @@ class BooksController < ApplicationController
 
       render json: @author, serializer: AuthorWithBooksSerializer
     else # /books
-      page = params[:page].to_i
-      per_page = params[:per_page] ? params[:per_page].to_i : 20
-
-      @books = Book.limit(per_page).offset(page * per_page)
+      @books = BookFilter.call(params)
       render json: @books, each_serializer: BookSerializer
     end
   end
@@ -61,12 +58,35 @@ class BooksController < ApplicationController
       end
     end
 
-    render json: @book, each_serializer: BookSerializer, status: :ok
+    render json: @book, serializer: BookSerializer, status: :ok
   end
 
   def destroy
     @book.destroy
     head :no_content
+  end
+
+  # GET /books/:id/libraries
+  def show_book_libraries
+    render json: @book.libraries, status: :ok
+  end
+
+  # POST /books/:book_uid/:library_uid
+  def add_book_to_library
+    library_uid = params[:library_uid]
+    libraries = @book.libraries
+    @book.update(libraries: (libraries << library_uid)) unless library_uid.in? libraries
+
+    head :ok
+  end
+
+  # DELETE /books/:book_uid/:library_uid
+  def remove_book_from_library
+    libraries = @book.libraries
+    libraries.delete(params[:library_uid])
+    @book.update(libraries: libraries)
+
+    head :ok
   end
 
   private
