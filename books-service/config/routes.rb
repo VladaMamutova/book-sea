@@ -8,4 +8,6 @@ Rails.application.routes.draw do
   get '/books/:id/libraries', to: 'books#show_book_libraries'
   post '/books/:id/:library_uid', to: 'books#add_book_to_library'
   delete '/books/:id/:library_uid', to: 'books#remove_book_from_library'
+
+  get '/auth', to: 'authorization#authorize'
 end

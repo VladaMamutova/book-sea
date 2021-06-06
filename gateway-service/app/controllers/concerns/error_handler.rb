@@ -14,6 +14,8 @@ module ErrorHandler
       case e.response.code
       when 400
         bad_request(Error::RecordInvalid.new(response['message'], response['details']))
+      when 401, 403
+        forbidden(StandardError.new("Access denied: #{response['message']}"))
       when 404
         not_found(Error::RecordNotFound.new(response['message']))
       else
@@ -27,10 +29,6 @@ module ErrorHandler
   def bad_request(error)
     response = { message: error.message, details: error.details }
     render json: response, status: :bad_request # 400
-  end
-
-  def unauthorized(error)
-    render json: { message: error.message }, status: :unauthorized # 401
   end
 
   def forbidden(error)

@@ -1,4 +1,25 @@
 class GatewayService
+  GATEWAY_ID = 1
+  GATEWAY_SECRET = Rails.application.secrets.secret_key_base
+  private_constant :GATEWAY_ID
+  private_constant :GATEWAY_SECRET
+
+  def get_books(params)
+    puts 'GET BOOKS'
+    BookService.new.get_books(params)
+  rescue RestClient::Unauthorized # ошибки микросервисной авторизации
+    BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
+    BookService.new.get_books(params)
+  rescue RestClient::Forbidden # истёк срок действия токена
+    # запрашиваем новый токен
+    BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
+
+    # повторяем запрос
+    BookService.new.get_books(params)
+  rescue RestClient::ExceptionWithResponse => e
+    raise Error::BookProcessError, extract_message(e.response)
+  end
+
   def add_book_to_library(book_uid, library_uid, available_count)
     if available_count <= 0
       raise Error::RecordInvalid.new('Validation failed', ['available_count must be greater than 0'])
@@ -36,5 +57,11 @@ class GatewayService
     end
 
     libraries
+  end
+
+  private
+
+  def extract_message(response)
+    JSON.parse(response.body)['message']
   end
 end

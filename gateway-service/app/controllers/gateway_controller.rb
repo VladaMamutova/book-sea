@@ -10,9 +10,9 @@ class GatewayController < ApplicationController
 
   # GET /books
   def show_books
-    book = BookService.new.get_books(params)
+    books = GatewayService.new.get_books(params)
 
-    render json: book, status: :ok
+    render json: books, status: :ok
   end
 
   # GET /author/:author_uid

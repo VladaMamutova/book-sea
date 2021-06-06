@@ -2,8 +2,18 @@ class BookService
   BOOKS_SERVICE_URL = Rails.configuration.books_service_url
   private_constant :BOOKS_SERVICE_URL
 
-  # Специфические ошибки запроса будут обработаны в ErrorHandler,
+  @@token = '' # class variable, shared between all instances
+
+  # Ошибки микросервисной авторизации будут обработаны в GatewayService,
+  # специфические для ошибки запроса будут обработаны в ErrorHandler,
   # в общих случаях кидаем BookProcessError.
+
+  def request_token(client_id, client_secret)
+    puts 'Request for a token to Book Service'
+    resource = RestClient::Resource.new("#{BOOKS_SERVICE_URL}/auth", user: client_id, password: client_secret)
+    response = resource.get
+    @@token = JSON.parse(response.body)['token']
+  end
 
   def get_book_info(book_uid)
     response = RestClient.get "#{BOOKS_SERVICE_URL}/books/#{book_uid}", { accept: :json }
@@ -16,10 +26,9 @@ class BookService
 
   def get_books(params)
     safe_params = params.permit(:name, :author, :genre, :page, :per_page)
-    response = RestClient.get "#{BOOKS_SERVICE_URL}/books?#{safe_params.to_query}", { accept: :json }
+    url = "#{BOOKS_SERVICE_URL}/books?#{safe_params.to_query}"
+    response = RestClient.get url, { accept: :json, Authorization: "Bearer #{@@token}" }
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response)
   end
 
   def get_author_info(author_uid)

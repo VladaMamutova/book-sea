@@ -2,6 +2,7 @@ require 'securerandom'
 
 class BooksController < ApplicationController
   before_action :set_book, except: %i[index create]
+  before_action :check_authorization
 
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
@@ -108,5 +109,12 @@ class BooksController < ApplicationController
   def params_to_string(params)
     hash = params.to_h
     hash.map { |key, value| "#{key.gsub('_', ' ')}: '#{value}'" }.join(', ')
+  end
+
+  def check_authorization
+    command = AuthorizeApiRequest.call(request.headers)
+    return if command.success?
+
+    raise Error::AuthorizationError, command.errors[:message].first
   end
 end
