@@ -9,7 +9,6 @@ class BookService
   # в общих случаях кидаем BookProcessError.
 
   def request_token(client_id, client_secret)
-    puts 'Request for a token to Book Service'
     resource = RestClient::Resource.new("#{BOOKS_SERVICE_URL}/auth", user: client_id, password: client_secret)
     response = resource.get
     @@token = JSON.parse(response.body)['token']

@@ -112,6 +112,7 @@ class BooksController < ApplicationController
   end
 
   def check_authorization
+    Rails.logger.info 'Check authorization before API request'
     command = AuthorizeApiRequest.call(request.headers)
     return if command.success?
 

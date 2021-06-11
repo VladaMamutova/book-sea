@@ -1,21 +1,29 @@
 class GatewayService
   GATEWAY_ID = 1
-  GATEWAY_SECRET = Rails.application.secrets.secret_key_base
+  GATEWAY_SECRET = Rails.application.secret_key_base
   private_constant :GATEWAY_ID
   private_constant :GATEWAY_SECRET
 
   def get_books(params)
-    puts 'GET BOOKS'
+    Rails.logger.info 'Request to get books'
     BookService.new.get_books(params)
+
   rescue RestClient::Unauthorized # ошибки микросервисной авторизации
+    Rails.logger.info "Request for a token to Book Service: (#{GATEWAY_ID}:#{GATEWAY_SECRET})"
     BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
+
+    Rails.logger.info 'Request to get books again'
     BookService.new.get_books(params)
+
   rescue RestClient::Forbidden # истёк срок действия токена
     # запрашиваем новый токен
+    Rails.logger.info "Request for a token to Book Service: (#{GATEWAY_ID}:#{GATEWAY_SECRET})"
     BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
 
     # повторяем запрос
+    Rails.logger.info 'Request to get books again'
     BookService.new.get_books(params)
+
   rescue RestClient::ExceptionWithResponse => e
     raise Error::BookProcessError, extract_message(e.response)
   end

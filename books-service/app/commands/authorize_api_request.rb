@@ -31,6 +31,7 @@ class AuthorizeApiRequest
   end
 
   def http_auth_header
+    Rails.logger.info "Headers: #{headers['Authorization']}"
     return headers['Authorization'].split(' ').last if headers['Authorization'].present?
 
     errors.add(:message, 'Missing token')

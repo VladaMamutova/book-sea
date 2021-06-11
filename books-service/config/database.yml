@@ -16,4 +16,7 @@ test:
 
 production:
   <<: *default
-  database: books_production
+  host: books-postgres # from /kube/postgres-service.yml
+  database: <%= ENV['POSTGRES_DB'] %>
+  user: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>

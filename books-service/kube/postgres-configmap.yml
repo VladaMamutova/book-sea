@@ -1,0 +1,12 @@
+# ConfigMaps provide a means to store environment parameters in Kubernetes,
+# to be fetched by a Pod when it starts.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: books-postgres-config
+  labels:
+    app: books-postgres
+data:
+  POSTGRES_DB: booksdb
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
