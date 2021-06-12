@@ -1,0 +1,17 @@
+# Kustomize is a tool that helps with configuration customization
+# and is baked into kubectl. We can deploy this using the -k flag
+# identifying that we want to use Kustomize:
+# kubectl apply -k 
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- books-service/kube/books-deployment.yml
+- books-service/kube/books-service.yml
+- gateway-service/kube/gateway-deployment.yml
+- gateway-service/kube/gateway-service.yml
+images:
+- name: PROJECT/BOOKS_IMAGE
+  newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9
+- name: PROJECT/GATEWAY_IMAGE
+  newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9

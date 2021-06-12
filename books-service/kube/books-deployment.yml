@@ -16,12 +16,12 @@ spec:
     spec:
       nodeSelector:
         # indicate that this pod has an affinity for the default-pool node pool,
-        # so it doesn’t get scheduled on our db-pool nodes which are reserved
+        # so it doesn't get scheduled on our db-pool nodes which are reserved
         # for our postgres pod
         cloud.google.com/gke-nodepool: default-pool
       containers:
         - name: books
-          image: us.gcr.io/book-sea/books@sha256:2584f66096eef5ecc74f035712e6ed1b48e2cfe828f5ffec8960ab1a7b9f2d0c
+          image: PROJECT/BOOKS_IMAGE # a placeholder value, will be replaced by Kustomize tool
           ports:
             - containerPort: 8180
           livenessProbe:

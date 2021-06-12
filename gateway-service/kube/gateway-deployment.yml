@@ -18,7 +18,7 @@ spec:
         cloud.google.com/gke-nodepool: default-pool
       containers:
         - name: gateway
-          image: us.gcr.io/book-sea/gateway@sha256:0e6ebe6e2d54d5f4822b12db5cadb0ab52c116cfc3624946a666ce72208bdc28
+          image: PROJECT/GATEWAY_IMAGE
           ports:
             - containerPort: 8580
           livenessProbe:
