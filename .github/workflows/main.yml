@@ -6,19 +6,88 @@ on:
   pull_request:
     branches:
       - master
+
+env:
+  PROJECT_ID: book-sea      # ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: rails        # Add your cluster name here.
+  GKE_ZONE: europe-west1-b  # Add your cluster zone here.
+  #DEPLOYMENT_NAME: gke-test # Add your deployment name here.
+  GKE_SA_KEY: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDpwEpep6v6ounK\njAFCrePqpvi1kWPnVkJ9JUOqr6izs9Lrtd6oO6Yii0dHkAvCfD/ONzP0EJ8/4v6Y\nocBfdlPp7BkyTTckKDs+pmG9kRzYiaBUqNlqCRV1yBYHjL7Sl92ue7SmKuo7vf5t\niej0mfmg/rnEIuVAm/VlNN2br9EG3SCfhOTYOYl1g+Jj6Dp8QhHs+zVDVo6FKpyi\ncjGHCGjQI/8IEO/oEakzmYrQDxCgwYBHhw7Yhw7DIM041d592rFI7M1E9NXgUoDV\nzWCoxzohaob35JrCpWit5oxEgwWZ5K65NZEoIXEPHzvy//EAIkg+4fG1cTv6wX2d\nC3jHEFvLAgMBAAECggEAEMN1kew8bTEZyyjXPkzyN3XaCEtw+ro48nilrawDUT/o\nNHdKjI4akAelCQDPlxcKDGPxGePHR/GjiJaxESePRQtlkzHubm1kMk4EXG/3vZ/B\nG9EwJmaYX2YGDmyNktTJVSYSAoi5W6d4g6qMRl50hJNAB0zpXATTSHrOGcg2GWPH\nR29HUQF2tjq8VaWtKyg+/OdtTvIjbxf1IAdUSQN278Ak7Wia2PbVMH3nQ2uOsqZx\ny7kE0KHZybsgMUJrYFLlmYhR45Q7hW06pfb0YdAPNBfqaVFbNhVM9Mv75rd+FBM9\n7CdvCWxKLwQsUwjtQeRu/t3M0G8Sr7pqrHY6A30s4QKBgQD5HLKW82THTrLK/P7g\nkR2Ort4k1WEJ6odIax+Q2lQOl5pOiuR4ID1eUVQKomigW0PxKxlZn8uzBNVMH2bO\nfTOpxZNFt858K3xShRjX71CLuPavVqWLEWjEPdTaBmRSk/Z0uDykgKVXstliiDP6\nGhstHKFwFSIDGsiQBl1uABQzjQKBgQDwNtzUhgOdyJ34ObPRs/Ghrp87OJxHUJg0\noBg4g1KHzIXy2v5D12yvk+MJJd74UkhftvbwLNJSLgOAbLyXJt/KDLj9NTtQrunJ\nDGyCJYEVdAw3bS//0XRAiboS1LPmB2I+ZObild+wKng2ta06gNfHgkpT+B4/sbkt\ntELulAwKtwKBgQCJoUFKBM75DpHZdE2c5I/f9NzmnL0wLVLwv76A2R73sOqf2jy/\n4ZAGPAiil3gWoFW5OIaY7aAtF86AcBjsnF+evHnRWuvJznyxWrePFbj6eQZReR2c\n59FqGn8utblXpkfT1LYsbKbs/PL9bSLKWwIIuni24/YWoQWODPYxf/mpQQKBgBcB\n2jLMxynkniS5OhzatEj9Fakxad52vK1FrCw1f8Eb+LRi/zl2N6W1b2hf5TQ5hU8N\nkic808QlPhad045SndqXT1yJLa4zopasBvSMLQnl/ImOfqts30qTJmxJTRW6HVHG\njkqjejJATxVGX1ocHw6vzvit6g/FsOvMuSBqs6CPAoGAK48rHTyHKNCyQ1unu5fL\nSeHBcQbjHu0pGK4kkulQoUK6vSG3UCY2oBM65xl84MSxgll5/uH8ECcCPJ6VvS8z\nLbtIH87OW9+gDzU+3xo55hnibO0ox+xNuEPMfu6PIVz3ltETO+765bHs6UPToutC\nz9bNgex1wsJYohDTfr/8yiY=
+  BOOKS_IMAGE: books        # = books deployment name
+  GATEWAY_IMAGE: gateway    # = gateway deployment name
+
 jobs:
-  build:
-    name: Build
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish and Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      # TODO Build projects
-      # TODO deploy
-      # - name: Run API Tests
-      #  id: run-newman
-      #  uses: anthonyvscode/newman-action@v1
-      #  with:
-      #    collection: postman/postman-collection.json
-      #    environment: postman/postman-heroku-environment.json
-      #    delayRequest: 50
-      #    reporters: cli
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Setup gcloud CLI
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ env.GKE_SA_KEY }}
+        project_id: ${{ env.PROJECT_ID }}
+
+    # Configure docker to use the gcloud command-line tool as a credential helper
+    - run: |-
+        gcloud --quiet auth configure-docker
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ env.GKE_SA_KEY }}
+    
+    - name: Create image names and tags
+    - run: |
+        echo "::set-env name=BOOKS_IMAGE_WITH_TAG::us.gcr.io/${{ env.PROJECT_ID }}/$BOOKS_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+        echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/${{ env.PROJECT_ID }}/$GATEWAY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+
+    # Build the Docker images
+    - name: Build Books Image
+      run: docker build --tag "$BOOKS_IMAGE_WITH_TAG" 
+
+    - name: Build Gateway Image
+      run: docker build --tag "$GATEWAY_IMAGE_WITH_TAG"
+
+    # Push the Docker images to Google Container Registry
+    - name: Publish Books Image
+      run: docker push "$BOOKS_IMAGE_WITH_TAG"
+
+    - name: Publish Gateway Image
+      run: docker push "$GATEWAY_IMAGE_WITH_TAG"
+
+    # Set up kustomize
+    # Kustomize is an optional tool used for managing YAML specs.
+    # After creating a kustomization file, the workflow below can be used to
+    # dynamically set fields of the image and pipe in the result to kubectl
+    - name: Set up Kustomize
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
+    # Deploy the Docker images to the GKE cluster
+    - name: Deploy Books Service
+      run: |-
+        ./kustomize edit set image PROJECT/BOOKS_IMAGE=$BOOKS_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $BOOKS_IMAGE
+
+    - name: Deploy Gateway Service
+      run: |-
+        ./kustomize edit set image PROJECT/GATEWAY_IMAGE=$GATEWAY_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $GATEWAY_IMAGE
+
+    # - name: Run API Tests
+    #   id: run-newman
+    #   uses: anthonyvscode/newman-action@v1
+    #   with:
+    #     collection: postman/postman-collection.json
+    #     environment: postman/postman-heroku-environment.json
+    #     delayRequest: 50
+    #     reporters: cli

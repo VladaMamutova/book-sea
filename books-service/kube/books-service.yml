@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: books
+  labels:
+    name: books
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 34.77.157.32 # use external IP here (gcloud compute addresses list)
+  ports:
+    - port: 80
+      targetPort: 8180
+      protocol: TCP
+  selector:
+    name: books # exposes all containers matching the name=books selector behind this load balancer

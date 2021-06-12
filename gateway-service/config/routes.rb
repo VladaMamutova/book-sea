@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/_health', to: 'application#health'
+
   get '/books', to: 'gateway#show_books'
   get '/books/:book_uid', to: 'gateway#show_book_info'
   post '/books', to: 'gateway#add_book'

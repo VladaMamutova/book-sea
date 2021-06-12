@@ -7,19 +7,31 @@ module Error
         rescue_from StandardError, RuntimeError do |e|
           respond(:internal_server_error, e.to_s)
         end
-        rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
-        rescue_from ActiveRecord::RecordInvalid, with: :invalid_response
+        rescue_from AuthorizationError, JWT::DecodeError, JWT::VerificationError, with: :unauthorized
+        rescue_from JWT::ExpiredSignature, with: :forbidden
+        rescue_from ActiveRecord::RecordNotFound, with: :not_found
+        rescue_from ActiveRecord::RecordInvalid, with: :invalid
       end
     end
 
     private
 
-    def not_found_response(error)
+    def unauthorized(error)
+      json = Helpers::Render.json(error.message)
+      render json: json, status: :unauthorized # 401
+    end
+
+    def forbidden(error)
+      json = Helpers::Render.json(error.message)
+      render json: json, status: :forbidden # 403
+    end
+
+    def not_found(error)
       json = Helpers::Render.json(error.message)
       render json: json, status: :not_found # 404
     end
 
-    def invalid_response(error)
+    def invalid(error)
       json = Helpers::Render.json('Validation failed', error.record.errors.full_messages)
       render json: json, status: :bad_request # 400
     end
