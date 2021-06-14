@@ -2,8 +2,8 @@
 class JsonWebToken
   class << self
     # Rails.application.secrets.secret_key_base can be null in production
-    # so use Rails.application.secret_key_base 
-    SECRET_KEY = Rails.application.secret_key_base 
+    # so use Rails.application.secret_key_base
+    SECRET_KEY = Rails.application.secret_key_base
     EXPIRATION_TIME_INTERVAL = 30.minutes
 
     # JWT token = base64(header) + '.' + base64(payload) + '.' + base64(signature)

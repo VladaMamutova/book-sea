@@ -41,4 +41,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: books-postgres-config
+      volumes:
+      - name: secrets
+        secret:
+          secretName: books-secrets
+          items:
+          - key: rails-master-key
+            path: config/master.key
 
