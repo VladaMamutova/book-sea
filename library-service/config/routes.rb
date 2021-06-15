@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/_health', to: 'application#health'
+
   resources :libraries
   resources :taken_books
 

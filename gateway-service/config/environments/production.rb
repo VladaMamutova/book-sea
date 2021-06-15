@@ -118,5 +118,5 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.books_service_url = 'http://34.77.157.32'
-  config.library_service_url = '' # add !!!!
+  config.library_service_url = 'http://35.205.133.66'
 end

@@ -7,11 +7,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - books-service/kube/books-deployment.yml
-- books-service/kube/books-service.yml
 - gateway-service/kube/gateway-deployment.yml
-- gateway-service/kube/gateway-service.yml
+- library-service/kube/library-deployment.yml
 images:
 - name: PROJECT/BOOKS_IMAGE
   newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9
 - name: PROJECT/GATEWAY_IMAGE
-  newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9
+  newName: us.gcr.io/book-sea/gateway@sha256:9a6e75dbf7b6cd20071d2fad8a4f58ac9979a47f2fb1c27ab6de23e0aeabf900
+- name: PROJECT/LIBRARY_IMAGE
+  newName: us.gcr.io/book-sea/library@sha256:3eaad4604a8a44f4daec6e08d776fbcdad2805bc43b84b40c66f26b9cb78832e

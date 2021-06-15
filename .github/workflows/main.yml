@@ -14,6 +14,7 @@ env:
   GKE_ZONE: europe-west1-b
   BOOKS_IMAGE: books      # = books deployment name
   GATEWAY_IMAGE: gateway  # = gateway deployment name
+  LIBRARY_IMAGE: library  # = library deployment name
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # allow to use set-env command
 
 jobs:
@@ -48,6 +49,7 @@ jobs:
       run: |-
         echo "::set-env name=BOOKS_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$BOOKS_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
         echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+        echo "::set-env name=LIBRARY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$LIBRARY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
 
     # Build the Docker images
     - name: Build Books Image
@@ -56,12 +58,18 @@ jobs:
     - name: Build Gateway Image
       run: docker build --tag "$GATEWAY_IMAGE_WITH_TAG" --file gateway-service/Dockerfile.prod gateway-service
 
+    - name: Build Library Image
+      run: docker build --tag "$LIBRARY_IMAGE_WITH_TAG" --file library-service/Dockerfile.prod library-service
+
     # Push the Docker images to Google Container Registry
     - name: Publish Books Image
       run: docker push "$BOOKS_IMAGE_WITH_TAG"
 
     - name: Publish Gateway Image
       run: docker push "$GATEWAY_IMAGE_WITH_TAG"
+
+    - name: Publish Library Image
+      run: docker push "$LIBRARY_IMAGE_WITH_TAG"
 
     # Set up Kustomize
     # Kustomize is an optional tool used for managing YAML specs.
@@ -84,6 +92,12 @@ jobs:
         ./kustomize edit set image PROJECT/GATEWAY_IMAGE=$GATEWAY_IMAGE_WITH_TAG
         kubectl apply -k .
         kubectl rollout status deployment $GATEWAY_IMAGE
+    
+    - name: Deploy Library Service
+      run: |-
+        ./kustomize edit set image PROJECT/LIBRARY_IMAGE=$LIBRARY_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $LIBRARY_IMAGE
 
     # - name: Run API Tests
     #   id: run-newman
