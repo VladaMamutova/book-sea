@@ -9,6 +9,7 @@ resources:
 - books-service/kube/books-deployment.yml
 - gateway-service/kube/gateway-deployment.yml
 - library-service/kube/library-deployment.yml
+- session-service/kube/session-deployment.yml
 images:
 - name: PROJECT/BOOKS_IMAGE
   newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9
@@ -16,3 +17,5 @@ images:
   newName: us.gcr.io/book-sea/gateway@sha256:9a6e75dbf7b6cd20071d2fad8a4f58ac9979a47f2fb1c27ab6de23e0aeabf900
 - name: PROJECT/LIBRARY_IMAGE
   newName: us.gcr.io/book-sea/library@sha256:3eaad4604a8a44f4daec6e08d776fbcdad2805bc43b84b40c66f26b9cb78832e
+- name: PROJECT/SESSION_IMAGE
+  newName: us.gcr.io/book-sea/session@sha256:b1c4505158b8f2fb2a0925fd7479246a78e3c65de2aaef96a333098f0ce8f0b2

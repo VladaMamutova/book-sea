@@ -37,6 +37,7 @@ test:
 #
 production:
   <<: *default
-  database: session_production
-  username: src
-  password: <%= ENV['SRC_DATABASE_PASSWORD'] %>
+  host: session-postgres # from /kube/postgres-service.yml
+  database: <%= ENV['POSTGRES_DB'] %>
+  user: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: session
+  labels:
+    name: session
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 104.199.20.46 # use external IP here (gcloud compute addresses list)
+  ports:
+    - port: 80
+      targetPort: 8680
+      protocol: TCP
+  selector:
+    name: session # exposes all containers matching the name=session selector behind this load balancer

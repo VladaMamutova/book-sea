@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session
+  labels:
+    name: session
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: session
+  template:
+    metadata:
+      labels:
+        name: session
+    spec:
+      nodeSelector:
+        # indicate that this pod has an affinity for the default-pool node pool,
+        # so it doesn't get scheduled on our db-pool nodes which are reserved
+        # for our postgres pod
+        cloud.google.com/gke-nodepool: default-pool
+      containers:
+        - name: session
+          image: PROJECT/SESSION_IMAGE # a placeholder value, will be replaced by Kustomize tool
+          ports:
+            - containerPort: 8680
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 8680
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 8680
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          envFrom:
+            - configMapRef:
+                name: session-postgres-config
+          env:
+          - name: RAILS_MASTER_KEY
+            valueFrom:
+              secretKeyRef:
+                name: session-secrets
+                key: rails-master-key
