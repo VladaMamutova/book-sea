@@ -17,12 +17,12 @@ module Error
     private
 
     def unauthorized(error)
-      json = Helpers::Render.json(error.message)
+      json = Helpers::Render.json("Access denied: #{error.message}")
       render json: json, status: :unauthorized # 401
     end
 
-    def forbidden(error)
-      json = Helpers::Render.json(error.message)
+    def forbidden(_error)
+      json = Helpers::Render.json('Access denied: the access token has expired')
       render json: json, status: :forbidden # 403
     end
 

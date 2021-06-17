@@ -1,4 +1,5 @@
 class AuthorsController < ApplicationController
+  before_action :check_authorization
   before_action :set_author, only: %i[show update destroy]
 
   # prevent CSRF attacks, use :null_session for APIs
@@ -37,5 +38,13 @@ class AuthorsController < ApplicationController
 
   def author_params
     params.require(:author).permit(:first_name, :last_name, :middle_name, :info)
+  end
+
+  def check_authorization
+    Rails.logger.info 'Check authorization before API request'
+    command = AuthorizeApiRequest.call(request.headers)
+    return if command.success?
+
+    raise Error::AuthorizationError, command.errors[:message].first
   end
 end

@@ -1,8 +1,8 @@
 require 'securerandom'
 
 class BooksController < ApplicationController
-  before_action :set_book, except: %i[index create]
   before_action :check_authorization
+  before_action :set_book, except: %i[index create]
 
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
