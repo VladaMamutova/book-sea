@@ -42,7 +42,7 @@ moscow_libraries.each do |library|
 end
 
 saint_petersburg = City.find_by!(name: 'Санкт-Петербург')
-saint_peterburg.libraries.create(
+saint_petersburg.libraries.create(
   name: 'Российская национальная библиотека',
   library_uid: SecureRandom.uuid,
   address: 'ул. Садовая, 18'

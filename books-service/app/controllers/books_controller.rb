@@ -72,7 +72,7 @@ class BooksController < ApplicationController
     render json: @book.libraries, status: :ok
   end
 
-  # POST /books/:book_uid/:library_uid
+  # POST /books/:book_uid/library/:library_uid
   def add_book_to_library
     library_uid = params[:library_uid]
     libraries = @book.libraries
@@ -81,7 +81,7 @@ class BooksController < ApplicationController
     head :ok
   end
 
-  # DELETE /books/:book_uid/:library_uid
+  # DELETE /books/:book_uid/library/:library_uid
   def remove_book_from_library
     libraries = @book.libraries
     libraries.delete(params[:library_uid])

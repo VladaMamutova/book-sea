@@ -55,11 +55,11 @@ class BookService
   end
 
   def add_book_to_library(book_uid, library_uid)
-    RestClient.post "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", {}, { Authorization: "Bearer #{@@token}" }
+    RestClient.post "#{BOOKS_SERVICE_URL}/books/#{book_uid}/library/#{library_uid}", {}, { Authorization: "Bearer #{@@token}" }
   end
 
   def remove_book_from_library(book_uid, library_uid)
-    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", { Authorization: "Bearer #{@@token}" }
+    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}/library/#{library_uid}", { Authorization: "Bearer #{@@token}" }
   end
 
   def get_book_libraries(book_uid)
