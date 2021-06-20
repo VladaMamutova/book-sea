@@ -21,19 +21,41 @@ moscow_libraries = [
   {
     name: 'Библиотека им. Ф.М. Достоевского',
     address: 'б-р Чистопрудный, 23, стр. 1'
+  },
+  {
+    name: 'Библиотека-читальня им. И.С. Тургенева',
+    address: 'Бобров пер., 6, стр. 1'
+  },
+  {
+    name: 'Российская государственная библиотека',
+    address: 'ул. Воздвиженка, 3/5'
   }
 ]
 
+moscow = City.find_by!(name: 'Москва')
 moscow_libraries.each do |library|
-  City.find_by!(name: 'Москва').libraries.create(
+  moscow.libraries.create(
     name: library[:name],
     library_uid: SecureRandom.uuid,
     address: library[:address]
   )
 end
 
-City.find_by!(name: 'Санкт-Петербург').libraries.create(
+saint_petersburg = City.find_by!(name: 'Санкт-Петербург')
+saint_peterburg.libraries.create(
   name: 'Российская национальная библиотека',
   library_uid: SecureRandom.uuid,
   address: 'ул. Садовая, 18'
+)
+
+saint_petersburg.libraries.create(
+  name: 'Библиотека Маяковского',
+  library_uid: SecureRandom.uuid,
+  address: 'набережная реки Фонтанки, 44'
+)
+
+City.find_by!(name: 'Казань').libraries.create(
+  name: 'Центральная Городская Библиотека',
+  library_uid: SecureRandom.uuid,
+  address: 'ул. Вишневского, 10'
 )

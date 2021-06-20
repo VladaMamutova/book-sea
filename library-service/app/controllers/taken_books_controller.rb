@@ -1,23 +1,12 @@
 class TakenBooksController < ApplicationController
-  before_action :set_library, except: :index
-  before_action :set_library_book, only: %i[remove_book take_book return_book]
+  before_action :set_library, except: :show_user_taken_books
+  before_action :set_library_book, only: %i[take_book return_book]
 
   protect_from_forgery with: :null_session
 
-  before_action :set_library, except: :index
-  before_action :set_library_book, only: %i[remove_book take_book return_book]
-
-  protect_from_forgery with: :null_session
-
-  def index
-    if params[:user_uid]
-      @taken_books = TakenBook.where(user_uid: params[:user_uid])
-    else
-      page = params[:page].to_i
-      per_page = params[:per_page] ? params[:per_page].to_i : 20
-
-      @taken_books = TakenBook.limit(per_page).offset(page * per_page)
-    end
+  # GET taken_books/user/:user_uid
+  def show_user_taken_books
+    @taken_books = TakenBook.where(user_uid: params[:user_uid])
 
     render json: @taken_books, each_serializer: TakenBookSerializer
   end
@@ -35,9 +24,9 @@ class TakenBooksController < ApplicationController
   def return_book
     # todo: get user_uid from jwt token
     user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
-    taken_book = TakenBookService.new.return(user_uid, @library_book, params[:status])
+    TakenBookService.new.return(user_uid, @library_book, params[:status])
 
-    render json: taken_book, status: :ok
+    head :ok
   end
 
   private
