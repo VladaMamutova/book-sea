@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/author/:author_uid', to: 'gateway#show_author_info'
   get '/author/:author_uid/books', to: 'gateway#show_author_with_books'
 
+  get '/library', to: 'gateway#show_libraries'
   get '/library/:library_uid/books', to: 'gateway#show_library_books'
   get '/library/book/:book_uid', to: 'gateway#find_book_in_libraries'
   post '/library/:library_uid/book/:book_uid', to: 'gateway#add_book_to_library'

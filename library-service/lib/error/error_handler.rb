@@ -11,7 +11,7 @@ module Error
         end
         rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
         rescue_from ActiveRecord::RecordInvalid, with: :invalid_response
-        rescue_from RecordNotAvailable, with: :not_available_response
+        rescue_from RecordNotAvailable, RecordOperationConflict, with: :conflict_response
       end
     end
 
@@ -27,7 +27,7 @@ module Error
       render json: json, status: :bad_request # 400
     end
 
-    def not_available_response(error)
+    def conflict_response(error)
       json = Helpers::Render.json(error.message)
       render json: json, status: :conflict # 409
     end

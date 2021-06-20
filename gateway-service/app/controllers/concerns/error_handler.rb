@@ -4,9 +4,6 @@ module ErrorHandler
   included do
     rescue_from StandardError, RuntimeError, with: :internal_server_error
     rescue_from Error::RecordInvalid, with: :bad_request
-    rescue_from Error::RecordNotFound, with: :not_found
-    rescue_from Error::BookNotAvailable, with: :conflict
-    rescue_from Error::BookProcessError, Error::LibraryProcessError, with: :unprocessable_entity
 
     rescue_from RestClient::ExceptionWithResponse do |e|
       response = JSON.parse(e.response.body)
@@ -15,11 +12,13 @@ module ErrorHandler
       when 400
         bad_request(Error::RecordInvalid.new(response['message'], response['details']))
       when 401, 403
-        forbidden(StandardError.new("Access denied: #{response['message']}"))
+        forbidden(StandardError.new(response['message']))
       when 404
         not_found(Error::RecordNotFound.new(response['message']))
+      when 409
+        conflict(StandardError.new(response['message']))
       else
-        internal_server_error(StandardError.new(response['message']))
+        unprocessable_entity(StandardError.new(response['message']))
       end
     end
   end

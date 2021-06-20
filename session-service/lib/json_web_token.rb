@@ -1,14 +1,15 @@
 # Singleton class
 class JsonWebToken
   class << self
-    SECRET_KEY = Rails.application.secrets.secret_key_base
+    SECRET_KEY = Rails.application.secret_key_base
+    EXPIRATION_TIME_INTERVAL = 30.minutes
 
     # JWT token = base64(header) + '.' + base64(payload) + '.' + base64(signature)
     # Header consists of the type of the token (JWT)
     # and the type of encryption algorithm (HS256) encoded in base-64.
     # Payload contains information about the user and his or her role (login, password, user_uid)
     # Signature is a unique key that identifies the service which creates the header.
-    def encode(payload, exp = 30.minutes.from_now)
+    def encode(payload, exp = EXPIRATION_TIME_INTERVAL.from_now)
       payload[:exp] = exp.to_i
       # The signature of the token will be a base-64 encoded version
       # of the Rails application's secret key.

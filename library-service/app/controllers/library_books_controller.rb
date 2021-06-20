@@ -19,15 +19,16 @@ class LibraryBooksController < ApplicationController
   # POST /libraries/:library_uid/book/:book_uid
   def add_book
     book_uid = params[:book_uid]
-    available_count = params[:available_count].to_i
-    @library_book = LibraryBookService.new.add(@library, book_uid, available_count)
+    number = params[:number].to_i
+    @library_book = LibraryBookService.new.add(@library, book_uid, number)
 
     render json: { available_count: @library_book.available_count }, status: :ok
   end
 
   # DELETE /libraries/:library_uid/book/:book_uid
   def remove_book
-    @library_book.destroy
+    LibraryBookService.new.remove(@library_book)
+
     head :no_content
   end
 
