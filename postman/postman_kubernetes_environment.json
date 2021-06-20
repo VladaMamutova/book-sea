@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "books_url",
-			"value": "http://books.book-sea.ru/",
+			"value": "http://34.77.157.32/",
 			"enabled": true
 		},
 		{
@@ -14,17 +14,17 @@
 		},
 		{
 			"key": "library_url",
-			"value": "http://library.book-sea.ru/",
+			"value": "http://35.205.133.66/",
 			"enabled": true
 		},
 		{
 			"key": "gateway_url",
-			"value": "http://gateway.book-sea.ru/",
+			"value": "http://34.76.150.43/",
 			"enabled": true
 		},
 		{
 			"key": "session_url",
-			"value": "http://session.book-sea.ru/",
+			"value": "http://104.199.20.46/",
 			"enabled": true
 		},
 		{
@@ -34,7 +34,7 @@
 		},
 		{
 			"key": "author_uid",
-			"value": "8b4cccf6-d0a7-48f6-9538-df729557d19c",
+			"value": "0d8e4ac3-9898-4bbe-ab85-03a534b21560",
 			"enabled": true
 		},
 		{
@@ -54,6 +54,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2021-06-20T17:33:47.543Z",
+	"_postman_exported_at": "2021-06-20T19:04:05.578Z",
 	"_postman_exported_using": "Postman/7.36.5"
 }
