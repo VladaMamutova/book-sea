@@ -113,11 +113,11 @@ jobs:
         kubectl apply -k .
         kubectl rollout status deployment $SESSION_IMAGE
 
-    # - name: Run API Tests
-    #   id: run-newman
-    #   uses: anthonyvscode/newman-action@v1
-    #   with:
-    #     collection: postman/postman-collection.json
-    #     environment: postman/postman-heroku-environment.json
-    #     delayRequest: 50
-    #     reporters: cli
+    - name: Run API Tests
+      id: run-newman
+      uses: anthonyvscode/newman-action@v1
+      with:
+        collection: postman/postman_collection.json
+        environment: postman/postman_kubernetes_environment.json
+        delayRequest: 50
+        reporters: cli
