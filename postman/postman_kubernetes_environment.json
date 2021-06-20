@@ -1,10 +1,10 @@
 {
-	"id": "f5cc7bf0-1763-476f-9dda-f4607361d5e5",
-	"name": "[local] Book Sea",
+	"id": "7665c206-9408-4e81-96b8-b94d72b53517",
+	"name": "[kubernetes] Book Sea",
 	"values": [
 		{
 			"key": "books_url",
-			"value": "http://localhost:8180",
+			"value": "http://books.book-sea.ru/",
 			"enabled": true
 		},
 		{
@@ -14,17 +14,17 @@
 		},
 		{
 			"key": "library_url",
-			"value": "http://localhost:8280",
+			"value": "http://library.book-sea.ru/",
 			"enabled": true
 		},
 		{
 			"key": "gateway_url",
-			"value": "http://localhost:8580",
+			"value": "http://gateway.book-sea.ru/",
 			"enabled": true
 		},
 		{
 			"key": "session_url",
-			"value": "http://localhost:8680",
+			"value": "http://session.book-sea.ru/",
 			"enabled": true
 		},
 		{
@@ -34,12 +34,12 @@
 		},
 		{
 			"key": "author_uid",
-			"value": "414cea5a-a079-4769-a71b-45a9f336573c",
+			"value": "8b4cccf6-d0a7-48f6-9538-df729557d19c",
 			"enabled": true
 		},
 		{
 			"key": "library_uid",
-			"value": "90106878-b416-4c4d-947c-82bfb3304609",
+			"value": "0ee0da85-e5f4-4373-8b3d-1fb5f4a724c0",
 			"enabled": true
 		},
 		{
@@ -54,6 +54,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2021-06-20T17:35:19.297Z",
+	"_postman_exported_at": "2021-06-20T17:33:47.543Z",
 	"_postman_exported_using": "Postman/7.36.5"
 }
