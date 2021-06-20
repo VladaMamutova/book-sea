@@ -5,8 +5,7 @@ class BookService
   @@token = '' # class variable, shared between all instances
 
   # Ошибки микросервисной авторизации будут обработаны в GatewayService,
-  # специфические для ошибки запроса будут обработаны в ErrorHandler,
-  # в общих случаях кидаем BookProcessError.
+  # специфические для ошибки запроса будут обработаны в ErrorHandler.
 
   def request_token(client_id, client_secret)
     resource = RestClient::Resource.new("#{BOOKS_SERVICE_URL}/auth", user: client_id, password: client_secret)
@@ -15,85 +14,56 @@ class BookService
   end
 
   def get_book_info(book_uid)
-    response = RestClient.get "#{BOOKS_SERVICE_URL}/books/#{book_uid}", { accept: :json }
+    url = "#{BOOKS_SERVICE_URL}/books/#{book_uid}"
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
   end
 
   def get_books(params)
     safe_params = params.permit(:name, :author, :genre, :page, :per_page)
     url = "#{BOOKS_SERVICE_URL}/books?#{safe_params.to_query}"
-    response = RestClient.get url, { accept: :json, Authorization: "Bearer #{@@token}" }
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
     JSON.parse(response.body)
   end
 
   def get_author_info(author_uid)
-    response = RestClient.get "#{BOOKS_SERVICE_URL}/authors/#{author_uid}", { accept: :json }
+    url = "#{BOOKS_SERVICE_URL}/authors/#{author_uid}"
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
   end
 
   def get_author_with_books(author_uid)
-    response = RestClient.get "#{BOOKS_SERVICE_URL}/authors/#{author_uid}/books", { accept: :json }
+    url = "#{BOOKS_SERVICE_URL}/authors/#{author_uid}/books"
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
   end
 
   def add_book(book_params)
+    url = "#{BOOKS_SERVICE_URL}/books"
     params = { book: { name: book_params[:name] }, author: book_params[:author].as_json, genre: book_params[:genre] }
-    response = RestClient.post "#{BOOKS_SERVICE_URL}/books", params, { content_type: :json, accept: :json }
+    headers = { content_type: :json, accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.post url, params, headers
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if [400, 404].exclude? e.response.code
-
-    raise e
   end
 
   def remove_book(book_uid)
-    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}"
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
+    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}", { Authorization: "Bearer #{@@token}" }
   end
 
   def add_book_to_library(book_uid, library_uid)
-    RestClient.post "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", {}
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
+    RestClient.post "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", {}, { Authorization: "Bearer #{@@token}" }
   end
 
   def remove_book_from_library(book_uid, library_uid)
-    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}"
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
+    RestClient.delete "#{BOOKS_SERVICE_URL}/books/#{book_uid}/#{library_uid}", { Authorization: "Bearer #{@@token}" }
   end
 
   def get_book_libraries(book_uid)
-    response = RestClient.get "#{BOOKS_SERVICE_URL}/books/#{book_uid}/libraries", { accept: :json }
+    response = RestClient.get "#{BOOKS_SERVICE_URL}/books/#{book_uid}/libraries", { accept: :json, Authorization: "Bearer #{@@token}" }
     JSON.parse(response.body)
-  rescue RestClient::ExceptionWithResponse => e
-    raise Error::BookProcessError, extract_message(e.response) if e.response.code != 404
-
-    raise e
-  end
-
-  private
-
-  def extract_message(response)
-    JSON.parse(response.body)['message']
   end
 end
