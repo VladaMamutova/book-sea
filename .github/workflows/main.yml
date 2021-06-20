@@ -48,10 +48,10 @@ jobs:
 
     - name: Create image names and tags
       run: |-
-        echo "::set-env name=BOOKS_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$BOOKS_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-        echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-        echo "::set-env name=LIBRARY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$LIBRARY_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-        echo "::set-env name=SESSION_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$SESSION_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+        echo "::set-env name=BOOKS_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$BOOKS_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=LIBRARY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$LIBRARY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=SESSION_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$SESSION_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
 
     # Build the Docker images
     - name: Build Books Image
