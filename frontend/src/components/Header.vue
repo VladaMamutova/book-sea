@@ -1,16 +1,24 @@
 <template>
-  <header class="bg-grey-lighter py-4">
-    <div class="container m-auto flex flex-wrap items-center justify-end">
-      <div class="flex-1 flex items-center">
-        <svg class="fill-current text-indigo" viewBox="0 0 24 24" width="24" height="24"><title>record vinyl</title><path d="M23.938 10.773a11.915 11.915 0 0 0-2.333-5.944 12.118 12.118 0 0 0-1.12-1.314A11.962 11.962 0 0 0 12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12c0-.414-.021-.823-.062-1.227zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-5a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path></svg>
+  <header class="bg-grey-lighter">
+    <div class="container mx-auto px-6 py-4 sm:px-6 md:space-x-10 border-b-2 border-gray-100 flex flex-wrap items-center justify-end">
+      <a href="/" class="flex-1 flex items-center">
+        <img class="h-16 w-auto sm:h-16" src="@/assets/book_lover.svg" alt="">
 
-        <a href="/" class="uppercase text-sm font-mono pl-4 font-semibold no-underline text-indigo-dark hover:text-indigo-darker">Book Sea</a>
-      </div>
-      <div>
-        <!-- <router-link to="/" class="link-grey px-2 no-underline" v-if="!signedIn()">Sign in</router-link> -->
-        <router-link to="/books" class="link-grey px-2 no-underline">Книги</router-link>
-        <!-- <router-link to="/artists" class="link-grey px-2 no-underline" v-if="signedIn()">Artists</router-link>
-        <a href="#" @click.prevent="signOut" class="link-grey px-2 no-underline" v-if="signedIn()">Sign out</a> -->
+        <p class="uppercase text-base font-mono pl-4 font-bold no-underline text-indigo-600">Book Sea</p>
+      </a>
+      
+      <nav class="md:flex space-x-10">
+        <router-link to="/books" class="text-base font-medium text-gray-700 hover:text-gray-900">Книги</router-link>
+        <router-link to="/books" class="text-base font-medium text-gray-700 hover:text-gray-900">Библиотеки</router-link>
+      </nav>
+
+      <div class="md:flex items-center justify-end md:flex-1 lg:w-0">
+        <a href="#" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+          Вход
+        </a>
+        <a href="#" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+          Регистрация
+        </a>
       </div>
     </div>
   </header>

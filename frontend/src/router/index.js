@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Books from '@/components/books/Books'
 
 Vue.use(VueRouter)
 
@@ -8,7 +7,7 @@ const routes = [
   {
     path: '/books',
     name: 'Books',
-    component: Books
+    component: () => import("../views/Books.vue"),
   }
 ]
 
