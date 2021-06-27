@@ -46,5 +46,14 @@ services:
     depends_on:
       - postgres
 
+  frontend:
+    build: ./frontend
+    volumes:
+      - .:/usr/src
+      - /usr/src/node_modules
+    working_dir: /usr/src/frontend
+    ports:
+      - 8980:8980      
+
 volumes:
   postgres:
