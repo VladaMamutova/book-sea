@@ -8,6 +8,7 @@ const routes = [
     path: '/books',
     name: 'Books',
     component: () => import("../views/Books.vue"),
+    props: (route) => ({ name: route.query.name, author: route.query.name })
   }
 ]
 

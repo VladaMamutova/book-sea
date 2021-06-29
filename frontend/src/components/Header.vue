@@ -4,7 +4,7 @@
       <a href="/" class="flex-1 flex items-center">
         <img class="h-16 w-auto sm:h-16" src="@/assets/book_lover.svg" alt="">
 
-        <p class="uppercase text-base font-mono pl-4 font-bold no-underline text-indigo-600">Book Sea</p>
+        <p class="uppercase text-lg pl-4 font-black no-underline text-indigo-600">Book Sea</p>
       </a>
       
       <nav class="md:flex space-x-10">

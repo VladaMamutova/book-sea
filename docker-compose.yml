@@ -53,7 +53,7 @@ services:
       - /usr/src/node_modules
     working_dir: /usr/src/frontend
     ports:
-      - 8980:8980      
+      - 8980:8980
 
 volumes:
   postgres:
