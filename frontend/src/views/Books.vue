@@ -52,10 +52,8 @@ export default {
     // if (!localStorage.signedIn) {
     //   this.$router.replace('/')
     // } else {
-    if (this.$route.query.name != '')
-      this.search_params.name = this.$route.query.name
-    if (this.$route.query.author != '')
-      this.search_params.author = this.$route.query.author
+    this.search_params.name = this.$route.query.name
+    this.search_params.author = this.$route.query.author
 
     this.$http.plain.get('/books', {params: this.$route.query })
       .then(response => { this.books = response.data })
