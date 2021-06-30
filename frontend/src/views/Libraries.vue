@@ -1,17 +1,11 @@
 <template>
   <div class="container mx-auto px-16 py-6">
-    <div class="">
-
-      <div class="">
-        <div class="text-red-500 text-base text-xl text-center py-20" v-if="error">{{ error }}</div>
-        <div class="text-gray-400 text-base text-xl text-center py-20" v-if="!error && libraries.length == 0">По данному запросу ничего не найдено</div>
-        
-        <List>
-          <LibraryItem v-for="library in libraries" :key="library.library_uid" :library="library" />
-        </List>
-      </div>
-
-    </div>
+    <div class="text-red-500 text-base text-xl text-center py-20" v-if="error">{{ error }}</div>
+    <div class="text-gray-400 text-base text-xl text-center py-20" v-if="!error && libraries.length == 0">По данному запросу ничего не найдено</div>
+    
+    <List>
+      <LibraryItem v-for="library in libraries" :key="library.library_uid" :library="library" />
+    </List>
   </div>
 </template>
 

@@ -14,6 +14,12 @@ const routes = [
     path: '/libraries',
     name: 'Libraries',
     component: () => import("../views/Libraries.vue")
+  },
+  {
+    path: '/library/:library_uid/books',
+    name: 'LibraryBooks',
+    component: () => import("../views/LibraryBooks.vue"),
+    props: (route) => ({ library: route.params.library })
   }
 ]
 
