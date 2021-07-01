@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto item-center px-16 py-6">
-    <h1 class="text-2xl font-bold text-black text-center">
+    <h1 class="text-3xl font-bold text-black text-center">
       {{ library.name }}
     </h1>
 
-    <div class="flex-wrap text-base text-gray-700 font-normal text-center">
+    <div class="flex-wrap text-lg mt-2 text-gray-700 font-normal text-center">
       г. {{ library.city }}, {{ library.address }}
     </div>
 

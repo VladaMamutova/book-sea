@@ -14,12 +14,18 @@
           </router-link>
         </h2>     
 
-        <div class="flex-wrap text-base text-gray-700 font-normal">
-          {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+        <div v-if="book.author" class="flex-wrap">
+          <router-link class="text-base text-gray-700 font-normal hover:text-gray-900"
+            :to="{ name: 'AuthorInfo', params: { author_uid: book.author.author_uid }}">
+            {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+          </router-link>
+        </div>
+        <div v-if="!book.author && book.genre" class="flex-wrap text-base text-gray-500 font-normal">
+          Жанр: <span class="text-gray-700"> {{ book.genre }} </span>
         </div>
       </div>
       
-      <div class="rounded-full bg-amber-50 text-amber-900 items-center flex pr-4">
+      <div class="rounded-full items-center flex pr-4">
         <router-link class="whitespace-nowrap inline-flex items-center justify-center text-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
           :to="{ name: 'BookInfo', params: { book_uid: book.book_uid }}">
           Подробнее

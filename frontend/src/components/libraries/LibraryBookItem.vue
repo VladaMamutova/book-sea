@@ -14,12 +14,15 @@
           </router-link>
         </h2>     
 
-        <div v-if="library_book.author" class="flex-wrap text-base text-gray-700 font-normal">
-          {{ library_book.author.last_name }} {{ library_book.author.first_name }} {{ library_book.author.middle_name }}
+        <div v-if="library_book.author" class="flex-wrap">
+          <router-link class="text-base text-gray-700 font-normal hover:text-gray-900"
+            :to="{ name: 'AuthorInfo', params: { author_uid: library_book.author.author_uid }}">
+            {{ library_book.author.last_name }} {{ library_book.author.first_name }} {{ library_book.author.middle_name }}
+          </router-link>
         </div>
       </div>
       
-      <div class="rounded-full bg-amber-50 text-amber-900 items-center flex pr-4">
+      <div class="rounded-full items-center flex pr-4">
         <a href="#" class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700">
           Взять в библиотеке
         </a>

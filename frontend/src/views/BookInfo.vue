@@ -10,20 +10,24 @@
         </div>
     
         <div class="flex-auto px-12 py-6 space-y-3">
-          <h2 v-if="book.name" class="text-3xl font-semibold text-black">
+          <h1 v-if="book.name" class="text-3xl font-semibold text-black">
             {{ book.name }}
-          </h2>     
+          </h1>     
 
-          <div v-if="book.author" class="flex-wrap text-xl text-gray-700 font-normal">
-            Автор: {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+          <div v-if="book.author" class="flex-wrap flex-inline text-xl text-gray-500 font-normal">
+            Автор:
+            <router-link class="text-gray-700 hover:text-gray-900"
+              :to="{ name: 'AuthorInfo', params: { author_uid: book.author.author_uid }}">
+              {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+            </router-link>
           </div>
 
-          <div v-if="book.genre" class="flex-wrap text-xl text-gray-700 font-normal">
-            Жанр: {{ book.genre }}
+          <div v-if="book.genre" class="flex-wrap text-xl text-gray-500 font-normal">
+            Жанр: <span class="text-gray-700"> {{ book.genre }} </span>
           </div>
         </div>
         
-        <div class="rounded-full bg-amber-50 text-amber-900 items-center flex pr-4">
+        <div class="rounded-full items-center flex pr-4">
           <a href="#" class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-xl font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700">
             Найти в библиотеках
           </a>
@@ -40,7 +44,7 @@ export default {
   name: 'BookInfo',
   data () {
     return {
-       book: {
+      book: {
         type: Object
       },
       error: ''
