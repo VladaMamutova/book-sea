@@ -1,10 +1,7 @@
 <template>
-  <div class="container mx-auto px-16 py-6">
-    <div class="text-red-500 text-base text-xl text-center py-20" v-if="error">{{ error }}</div>
-
-    <div v-if="!error" class="group block rounded-lg px-24 py-12 border border-gray-200">
-      <div class="flex space-x-4">
-
+  <div class="container mx-auto item-center px-16 py-6">
+     <div class="flex justify-center space-x-4">
+       <div class="flex justify-center">
         <div class="flex flex-initial items-center">
           <img img src="@/assets/book.svg" alt="Обложка книги" class="flex-none object-cover" width="140" height="140" />
         </div>
@@ -26,39 +23,45 @@
             Жанр: <span class="text-gray-700"> {{ book.genre }} </span>
           </div>
         </div>
-        
-        <div class="rounded-full items-center flex pr-4">
-          <router-link class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-xl font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
-            :to="{ name: 'BookLibraries', params: { book_uid: book_uid, book: book }}">
-            Найти в библиотеках
-          </router-link>
-        </div>
-        
-      </div>
-    </div>
+       </div>
+     </div>
+    
+    <List class="mt-12">
+      <BookLibraryItem v-for="book_library in book_libraries" :key="book_library.library.library_uid"
+        :library="book_library.library" :available_count="book_library.available_count"/>
+    </List>
+
   </div>
 </template>
 
 <script>
 
+import List from '@/components/List.vue'
+import BookLibraryItem from '@/components/library/BookLibraryItem.vue'
+
 export default {
-  name: 'BookInfo',
+  name: 'BookLibraries',
+  props: {
+    book: {
+      type: Object,
+      required: true
+    }
+  },
+  components: {
+    List,
+    BookLibraryItem
+  },
   data () {
     return {
-      book_uid: {
-        type: String,
-        required: true
-      },
-      book: {
-        type: Object
-      },
-      error: ''
+      book_uid: '',
+      book_libraries: [],
+      error: '',
     }
   },
   created () {
     this.book_uid = this.$route.params.book_uid
-    this.$http.plain.get('/books/'+ this.book_uid)
-      .then(response => { this.book = response.data; })
+    this.$http.plain.get('/library/book/'+ this.book_uid)
+      .then(response => { this.book_libraries = response.data; })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
   },
   methods: {

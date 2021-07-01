@@ -28,12 +28,14 @@ export default {
   },
   data () {
     return {
+      author_uid: '',
       author: {},
       error: '',
     }
   },
   created () {
-    this.$http.plain.get('/author/'+ this.$route.params.author_uid + '/books')
+    this.author_uid = this.$route.params.author_uid
+    this.$http.plain.get('/author/'+ this.author_uid + '/books')
       .then(response => { this.author = response.data; })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
   },

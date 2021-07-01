@@ -9,7 +9,7 @@
     </div>
 
     <List class="mt-6">
-      <LibraryBookItem v-for="library_book in library_books" :key="library_book.book_uid" :library_book="library_book" />
+      <LibraryBookItem v-for="library_book in library_books" :key="library_book.book_uid" :library_book="library_book" :book_uid="library_book.book_uid" />
     </List>
 
   </div>
@@ -18,7 +18,7 @@
 <script>
 
 import List from '@/components/List.vue'
-import LibraryBookItem from '@/components/libraries/LibraryBookItem.vue'
+import LibraryBookItem from '@/components/library/LibraryBookItem.vue'
 
 export default {
   name: 'LibraryBooks',

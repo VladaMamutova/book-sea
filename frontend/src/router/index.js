@@ -35,6 +35,12 @@ const routes = [
     name: 'LibraryBooks',
     component: () => import("../views/library/LibraryBooks.vue"),
     props: (route) => ({ library: route.params.library })
+  },
+  {
+    path: '/library/book/:book_uid',
+    name: 'BookLibraries',
+    component: () => import("../views/library/BookLibraries.vue"),
+    props: (route) => ({ book: route.params.book })
   }
 ]
 

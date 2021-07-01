@@ -15,7 +15,7 @@
       <div class="flex justify-center">
         <div class="rounded-full items-center flex">
           <router-link class="flex flex-wrap whitespace-nowrap items-center mt-4 px-4 py-2 rounded-md shadow-sm text-xl font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
-            :to="{ name: 'AuthorBooks', params: { author_uid: author.author_uid }}">
+            :to="{ name: 'AuthorBooks', params: { author_uid: author_uid }}">
             Найти книги автора
           </router-link>
         </div>
@@ -31,14 +31,18 @@ export default {
   name: 'AuthorInfo',
   data () {
     return {
-       author: {
+      author_uid: {
+        type: String
+      },
+      author: {
         type: Object
       },
       error: ''
     }
   },
   created () {
-    this.$http.plain.get('/author/'+ this.$route.params.author_uid)
+    this.author_uid = this.$route.params.author_uid
+    this.$http.plain.get('/author/'+ this.author_uid)
       .then(response => { this.author = response.data; })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
   },

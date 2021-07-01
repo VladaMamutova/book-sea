@@ -14,8 +14,9 @@
           </router-link>
         </h2>     
 
-        <div v-if="library_book.author" class="flex-wrap">
-          <router-link class="text-base text-gray-700 font-normal hover:text-gray-900"
+        <div v-if="library_book.author" class="flex-wrap text-base text-gray-500 font-normal">
+          Автор: 
+          <router-link class="text-gray-700 hover:text-gray-900"
             :to="{ name: 'AuthorInfo', params: { author_uid: library_book.author.author_uid }}">
             {{ library_book.author.last_name }} {{ library_book.author.first_name }} {{ library_book.author.middle_name }}
           </router-link>
@@ -37,6 +38,10 @@
 export default {
   name: 'LibraryBookItem',
   props: {
+    book_uid: {
+      type: String,
+      required: true
+    },
     library_book: {
       type: Object,
       required: true

@@ -12,7 +12,7 @@
 <script>
 
 import List from '@/components/List.vue'
-import LibraryItem from '@/components/libraries/LibraryItem.vue'
+import LibraryItem from '@/components/library/LibraryItem.vue'
 
 export default {
   name: 'Libraries',
