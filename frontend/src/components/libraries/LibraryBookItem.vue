@@ -8,7 +8,7 @@
   
       <div class="flex-auto px-6 py-4 space-y-2">
         <h2 v-if="library_book.name">
-          <router-link class="text-xl font-semibold text-black hover:underline hover:text-indigo-700"
+          <router-link class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
             :to="{ name: 'BookInfo', params: { book_uid: library_book.book_uid }}">
             {{ library_book.name }}
           </router-link>

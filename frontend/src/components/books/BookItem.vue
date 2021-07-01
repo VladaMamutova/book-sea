@@ -8,14 +8,15 @@
   
       <div class="flex-auto px-6 py-4 space-y-2">
         <h2>
-          <router-link class="text-xl font-semibold text-black hover:underline hover:text-indigo-700"
+          <router-link class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
             :to="{ name: 'BookInfo', params: { book_uid: book.book_uid }}">
             {{ book.name }}
           </router-link>
         </h2>     
 
-        <div v-if="book.author" class="flex-wrap">
-          <router-link class="text-base text-gray-700 font-normal hover:text-gray-900"
+        <div v-if="book.author" class="flex-wrap text-base text-gray-500 font-normal">
+          Автор: 
+          <router-link class=" text-gray-700 hover:text-gray-900"
             :to="{ name: 'AuthorInfo', params: { author_uid: book.author.author_uid }}">
             {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
           </router-link>

@@ -7,33 +7,33 @@ const routes = [
   {
     path: '/books',
     name: 'Books',
-    component: () => import("../views/Books.vue"),
+    component: () => import("../views/books/Books.vue"),
     props: (route) => ({ name: route.query.name, author: route.query.name })
   },
   {
-    path: '/libraries',
+    path: '/library',
     name: 'Libraries',
-    component: () => import("../views/Libraries.vue")
+    component: () => import("../views/library/Libraries.vue")
   },
   {
     path: '/books/:book_uid',
     name: 'BookInfo',
-    component: () => import("../views/BookInfo.vue")
+    component: () => import("../views/books/BookInfo.vue")
   },
   {
     path: '/author/:author_uid',
     name: 'AuthorInfo',
-    component: () => import("../views/AuthorInfo.vue")
+    component: () => import("../views/books/AuthorInfo.vue")
   },
   {
     path: '/author/:author_uid/books',
     name: 'AuthorBooks',
-    component: () => import("../views/AuthorBooks.vue")
+    component: () => import("../views/books/AuthorBooks.vue")
   },
   {
     path: '/library/:library_uid/books',
     name: 'LibraryBooks',
-    component: () => import("../views/LibraryBooks.vue"),
+    component: () => import("../views/library/LibraryBooks.vue"),
     props: (route) => ({ library: route.params.library })
   }
 ]

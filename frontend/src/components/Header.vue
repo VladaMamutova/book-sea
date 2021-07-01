@@ -9,7 +9,7 @@
       
       <nav class="md:flex space-x-10">
         <router-link to="/books" class="text-base font-medium text-gray-700 hover:text-gray-900">Книги</router-link>
-        <router-link to="/libraries" class="text-base font-medium text-gray-700 hover:text-gray-900">Библиотеки</router-link>
+        <router-link to="/library" class="text-base font-medium text-gray-700 hover:text-gray-900">Библиотеки</router-link>
       </nav>
 
       <div class="md:flex items-center justify-end md:flex-1 lg:w-0">

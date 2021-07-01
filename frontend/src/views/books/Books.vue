@@ -7,7 +7,7 @@
           <p class="text-gray-400 text-base font-medium text-center">Поиск книги</p>
           <input name="name" v-model="search_params.name" class="focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none w-full text-base text-black placeholder-gray-400 border border-gray-300 rounded-md py-2 pl-6" type="text" aria-label="Название" placeholder="Название" />
           <input name="author" v-model="search_params.author" class="focus:border-indigo-300 focus:ring-1 focus:ring-indigo-300 focus:outline-none w-full text-base text-black placeholder-gray-400 border border-gray-300 rounded-md py-2 pl-6" type="text" aria-label="Автор" placeholder="Автор" />
-          <a class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
+          <a class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none cursor-pointer "
             @click.prevent="findBooks()">
             Найти
           </a>

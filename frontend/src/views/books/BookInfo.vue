@@ -10,7 +10,7 @@
         </div>
     
         <div class="flex-auto px-12 py-6 space-y-3">
-          <h1 v-if="book.name" class="text-3xl font-semibold text-black">
+          <h1 v-if="book.name" class="text-3xl font-bold text-black">
             {{ book.name }}
           </h1>     
 
