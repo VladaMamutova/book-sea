@@ -6,9 +6,12 @@
         <img img src="@/assets/book.svg" alt="Обложка книги" class="flex-none object-cover" width="100" height="100" />
       </div>
   
-      <div class="flex-auto px-6 py-4 space-y-1.5">
-        <h2 class="text-xl font-semibold text-black">
-          {{ book.name }}
+      <div class="flex-auto px-6 py-4 space-y-2">
+        <h2>
+          <router-link class="text-xl font-semibold text-black hover:underline hover:text-indigo-700"
+            :to="{ name: 'BookInfo', params: { book_uid: book.book_uid }}">
+            {{ book.name }}
+          </router-link>
         </h2>     
 
         <div class="flex-wrap text-base text-gray-700 font-normal">
@@ -17,9 +20,10 @@
       </div>
       
       <div class="rounded-full bg-amber-50 text-amber-900 items-center flex pr-4">
-        <a href="#" class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700">
+        <router-link class="whitespace-nowrap inline-flex items-center justify-center text-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
+          :to="{ name: 'BookInfo', params: { book_uid: book.book_uid }}">
           Подробнее
-        </a>
+        </router-link>
       </div>
       
     </div>

@@ -4,7 +4,10 @@
  
       <div class="flex-auto py-4 space-y-2">
         <h2 class="text-xl font-semibold text-black">
-          {{ library.name }}
+          <router-link class="text-xl font-semibold text-black hover:underline hover:text-indigo-700"
+            :to="{ name: 'LibraryBooks', params: { library_uid: library.library_uid, library: library }}">
+            {{ library.name }}
+          </router-link>
         </h2>     
 
         <div class="flex-wrap text-base text-gray-700 font-normal">
@@ -26,6 +29,7 @@
 <script>
 
 export default {
+  name: 'LibraryItem',
   props: {
     library: {
       type: Object,

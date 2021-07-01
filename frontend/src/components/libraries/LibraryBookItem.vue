@@ -6,12 +6,15 @@
         <img img src="@/assets/book.svg" alt="Обложка книги" class="flex-none object-cover" width="100" height="100" />
       </div>
   
-      <div class="flex-auto px-6 py-4 space-y-1.5">
-        <h2 class="text-xl font-semibold text-black">
-          {{ library_book.name }}
+      <div class="flex-auto px-6 py-4 space-y-2">
+        <h2 v-if="library_book.name">
+          <router-link class="text-xl font-semibold text-black hover:underline hover:text-indigo-700"
+            :to="{ name: 'BookInfo', params: { book_uid: library_book.book_uid }}">
+            {{ library_book.name }}
+          </router-link>
         </h2>     
 
-        <div class="flex-wrap text-base text-gray-700 font-normal">
+        <div v-if="library_book.author" class="flex-wrap text-base text-gray-700 font-normal">
           {{ library_book.author.last_name }} {{ library_book.author.first_name }} {{ library_book.author.middle_name }}
         </div>
       </div>
@@ -29,7 +32,13 @@
 <script>
 
 export default {
-  props: ['library_book'],
+  name: 'LibraryBookItem',
+  props: {
+    library_book: {
+      type: Object,
+      required: true
+    }
+  }
 }
 
 </script>
