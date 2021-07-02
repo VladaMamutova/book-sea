@@ -11,6 +11,7 @@ module Error
         rescue_from JWT::ExpiredSignature, with: :forbidden
         rescue_from ActiveRecord::RecordNotFound, with: :not_found
         rescue_from ActiveRecord::RecordInvalid, with: :invalid
+        rescue_from RecordOperationConflict, with: :conflict_response
       end
     end
 
@@ -34,6 +35,11 @@ module Error
     def invalid(error)
       json = Helpers::Render.json('Validation failed', error.record.errors.full_messages)
       render json: json, status: :bad_request # 400
+    end
+
+    def conflict_response(error)
+      json = Helpers::Render.json(error.message)
+      render json: json, status: :conflict # 409
     end
 
     def respond(status, message)

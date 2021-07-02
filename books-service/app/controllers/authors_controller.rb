@@ -5,6 +5,11 @@ class AuthorsController < ApplicationController
   # prevent CSRF attacks, use :null_session for APIs
   protect_from_forgery with: :null_session
 
+  def index
+    @authors = Author.all
+    render json: @authors, each_serializer: AuthorShortSerializer
+  end
+
   def create
     @author = Author.new(author_params)
     @author.author_uid = SecureRandom.uuid

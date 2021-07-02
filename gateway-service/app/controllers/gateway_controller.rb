@@ -43,6 +43,20 @@ class GatewayController < ApplicationController
     head :no_content
   end
 
+  # GET /authors
+  def show_authors
+    authors = GatewayService.new.get_authors
+
+    render json: authors, status: :ok
+  end
+
+  # GET /genres
+  def show_genres
+    genres = GatewayService.new.get_genres
+
+    render json: genres, status: :ok
+  end
+
   # GET /library
   def show_libraries
     libraries = LibraryService.new.show_libraries

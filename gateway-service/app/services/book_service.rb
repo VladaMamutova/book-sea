@@ -28,6 +28,20 @@ class BookService
     JSON.parse(response.body)
   end
 
+  def get_authors
+    url = "#{BOOKS_SERVICE_URL}/authors"
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
+    JSON.parse(response.body)
+  end
+
+  def get_genres
+    url = "#{BOOKS_SERVICE_URL}/genres"
+    headers = { accept: :json, Authorization: "Bearer #{@@token}" }
+    response = RestClient.get url, headers
+    JSON.parse(response.body)
+  end
+
   def get_author_info(author_uid)
     url = "#{BOOKS_SERVICE_URL}/authors/#{author_uid}"
     headers = { accept: :json, Authorization: "Bearer #{@@token}" }
