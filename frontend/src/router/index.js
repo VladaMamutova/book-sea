@@ -6,8 +6,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Books',
-    component: () => import("../views/books/Books.vue"),
+    name: 'Home',
+    component: () => import("../views/Home.vue")    
   },
   {
     path: '/sign_in',
@@ -51,6 +51,11 @@ const routes = [
     name: 'BookLibraries',
     component: () => import("../views/library/BookLibraries.vue"),
     props: (route) => ({ book: route.params.book })
+  },
+  {
+    path: '/*',
+    name: 'NotFound',
+    component: () => import("../views/NotFound.vue"),
   }
 ]
 

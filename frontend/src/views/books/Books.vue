@@ -49,16 +49,12 @@ export default {
     }
   },
   created () {
-    // if (!localStorage.signedIn) {
-    //   this.$router.replace('/')
-    // } else {
     this.search_params.name = this.$route.query.name
     this.search_params.author = this.$route.query.author
 
     this.$http.plain.get('/books', {params: this.$route.query })
       .then(response => { this.books = response.data })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
-    // }
   },
   methods: {
     setError (error, text) {

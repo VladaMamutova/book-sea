@@ -62,18 +62,26 @@ export default {
       localStorage.csrf = response.data.token
       localStorage.signedIn = true
       localStorage.userLogin = this.login
+      localStorage.role = response.data.role
       this.error = ''
-      this.$router.replace('/')
+      // if (localStorage.role == "admin")
+      //   this.$router.push('/admin/books')
+      // else
+        this.$router.push('/books')
     },
     signInFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.message) || 'Неверный логин или пароль'
       delete localStorage.csrf
       delete localStorage.signedIn
       delete localStorage.userLogin
+      delete localStorage.role
     },
     checkSignedIn () {
       if (localStorage.signedIn) {
-        this.$router.replace('/')
+      // if (localStorage.role == "admin")
+      //   this.$router.push('/admin/books')
+      // else
+        this.$router.push('/books')
       }
     }
   }
