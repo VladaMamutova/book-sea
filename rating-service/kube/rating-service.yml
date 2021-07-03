@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating
+  labels:
+    name: rating
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 35.241.208.172 # use external IP here (gcloud compute addresses list)
+  ports:
+    - port: 80
+      targetPort: 8480
+      protocol: TCP
+  selector:
+    name: rating # exposes all containers matching the name=rating selector behind this load balancer

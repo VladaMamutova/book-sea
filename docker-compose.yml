@@ -28,6 +28,16 @@ services:
     depends_on:
       - postgres
 
+  rating:
+    build: ./rating-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/rating-service
+    ports:
+      - 8480:8480
+    depends_on:
+      - postgres
+
   gateway:
     build: ./gateway-service
     volumes:

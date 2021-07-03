@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: postgres
+  user: postgres
+  password: postgres
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: rating_development
+
+test:
+  <<: *default
+  database: rating_test
+
+production:
+  <<: *default
+  host: rating-postgres # from /kube/postgres-service.yml
+  database: <%= ENV['POSTGRES_DB'] %>
+  user: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
