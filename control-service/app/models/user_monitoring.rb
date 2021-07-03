@@ -1,0 +1,2 @@
+class UserMonitoring < ApplicationRecord
+end

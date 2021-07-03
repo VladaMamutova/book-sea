@@ -28,6 +28,26 @@ services:
     depends_on:
       - postgres
 
+  control:
+    build: ./control-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/control-service
+    ports:
+      - 8380:8380
+    depends_on:
+      - postgres
+
+  rating:
+    build: ./rating-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/rating-service
+    ports:
+      - 8480:8480
+    depends_on:
+      - postgres
+
   gateway:
     build: ./gateway-service
     volumes:
@@ -45,6 +65,14 @@ services:
       - 8680:8680
     depends_on:
       - postgres
+
+  report:
+    build: ./report-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/report-service
+    ports:
+      - 8780:8780
 
   frontend:
     build: ./frontend

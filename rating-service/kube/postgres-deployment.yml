@@ -1,0 +1,34 @@
+# A Kubernetes deployment manifest for Postgres would look similar to the example.
+# Create a single pod replica. Use a base image postgres:11.5. Expose port 5432.
+# Environment variables set using parameters found in a ConfigMap.
+# Mount a Persistent Volume using a Persistent Volume Claim for the Postgres database files.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-postgres
+  template:
+    metadata:
+      labels:
+        app: rating-postgres
+    spec:
+      containers:
+        - name: rating-postgres
+          image: postgres:11.5
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: rating-postgres-config
+          volumeMounts:
+            - name: ratingdb
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: ratingdb
+          persistentVolumeClaim:
+            claimName: rating-postgres-pv-claim

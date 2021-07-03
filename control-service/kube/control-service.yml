@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: control
+  labels:
+    name: control
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 34.140.132.99 # use external IP here (gcloud compute addresses list)
+  ports:
+    - port: 80
+      targetPort: 8380
+      protocol: TCP
+  selector:
+    name: control # exposes all containers matching the name=control selector behind this load balancer
