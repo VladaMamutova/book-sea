@@ -7,15 +7,24 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - books-service/kube/books-deployment.yml
-- gateway-service/kube/gateway-deployment.yml
 - library-service/kube/library-deployment.yml
+- control-service/kube/control-deployment.yml
+- rating-service/kube/rating-deployment.yml
+- gateway-service/kube/gateway-deployment.yml
 - session-service/kube/session-deployment.yml
+- report-service/kube/report-deployment.yml
 images:
 - name: PROJECT/BOOKS_IMAGE
   newName: us.gcr.io/book-sea/books@sha256:1e8e299156fae2423729b2ced195d3115234b24358e9a2de4c49035de148aac9
-- name: PROJECT/GATEWAY_IMAGE
-  newName: us.gcr.io/book-sea/gateway@sha256:9a6e75dbf7b6cd20071d2fad8a4f58ac9979a47f2fb1c27ab6de23e0aeabf900
 - name: PROJECT/LIBRARY_IMAGE
   newName: us.gcr.io/book-sea/library@sha256:3eaad4604a8a44f4daec6e08d776fbcdad2805bc43b84b40c66f26b9cb78832e
+- name: PROJECT/CONTROL_IMAGE
+  newName: us.gcr.io/book-sea/control@sha256:487c32df756c4bc66883bed92db6e20e7130acf07fd90385d94da5987cea6681
+- name: PROJECT/RATING_IMAGE
+  newName: us.gcr.io/book-sea/rating@sha256:074d706a62baf069bef6590f57f58c007ebf1101cccd0127af6df03761994611
+- name: PROJECT/GATEWAY_IMAGE
+  newName: us.gcr.io/book-sea/gateway@sha256:9a6e75dbf7b6cd20071d2fad8a4f58ac9979a47f2fb1c27ab6de23e0aeabf900
 - name: PROJECT/SESSION_IMAGE
   newName: us.gcr.io/book-sea/session@sha256:b1c4505158b8f2fb2a0925fd7479246a78e3c65de2aaef96a333098f0ce8f0b2
+- name: PROJECT/REPORT_IMAGE
+  newName: us.gcr.io/book-sea/report@sha256:e7fc8c45dd72b576ed7ea35ae8069208a7f8530d7777326ae051bed69df6ab8d

@@ -13,9 +13,12 @@ env:
   GKE_CLUSTER: rails
   GKE_ZONE: europe-west1-b
   BOOKS_IMAGE: books      # = books deployment name
-  GATEWAY_IMAGE: gateway  # = gateway deployment name
   LIBRARY_IMAGE: library  # = library deployment name
+  CONTROL_IMAGE: control  # = control deployment name
+  RATING_IMAGE: rating  # = rating deployment name
+  GATEWAY_IMAGE: gateway  # = gateway deployment name
   SESSION_IMAGE: session  # = session deployment name
+  REPORT_IMAGE: report  # = report deployment name
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # allow to use set-env command
 
 jobs:
@@ -49,35 +52,56 @@ jobs:
     - name: Create image names and tags
       run: |-
         echo "::set-env name=BOOKS_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$BOOKS_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
-        echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
         echo "::set-env name=LIBRARY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$LIBRARY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=CONTROL_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$CONTROL_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=RATING_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$RATING_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
         echo "::set-env name=SESSION_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$SESSION_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=REPORT_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$REPORT_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
 
     # Build the Docker images
     - name: Build Books Image
       run: docker build --tag "$BOOKS_IMAGE_WITH_TAG" --file books-service/Dockerfile.prod books-service
 
-    - name: Build Gateway Image
-      run: docker build --tag "$GATEWAY_IMAGE_WITH_TAG" --file gateway-service/Dockerfile.prod gateway-service
-
     - name: Build Library Image
       run: docker build --tag "$LIBRARY_IMAGE_WITH_TAG" --file library-service/Dockerfile.prod library-service
 
+    - name: Build Control Image
+      run: docker build --tag "$CONTROL_IMAGE_WITH_TAG" --file control-service/Dockerfile.prod control-service
+
+    - name: Build Rating Image
+      run: docker build --tag "$RATING_IMAGE_WITH_TAG" --file rating-service/Dockerfile.prod rating-service
+
+    - name: Build Gateway Image
+      run: docker build --tag "$GATEWAY_IMAGE_WITH_TAG" --file gateway-service/Dockerfile.prod gateway-service
+
     - name: Build Session Image
       run: docker build --tag "$SESSION_IMAGE_WITH_TAG" --file session-service/Dockerfile.prod session-service
+
+    - name: Build Report Image
+      run: docker build --tag "$REPORT_IMAGE_WITH_TAG" --file report-service/Dockerfile.prod report-service
 
     # Push the Docker images to Google Container Registry
     - name: Publish Books Image
       run: docker push "$BOOKS_IMAGE_WITH_TAG"
 
-    - name: Publish Gateway Image
-      run: docker push "$GATEWAY_IMAGE_WITH_TAG"
-
     - name: Publish Library Image
       run: docker push "$LIBRARY_IMAGE_WITH_TAG"
 
+    - name: Publish Control Image
+      run: docker push "$CONTROL_IMAGE_WITH_TAG"
+
+    - name: Publish Rating Image
+      run: docker push "$RATING_IMAGE_WITH_TAG"
+
+    - name: Publish Gateway Image
+      run: docker push "$GATEWAY_IMAGE_WITH_TAG"
+
     - name: Publish Session Image
       run: docker push "$SESSION_IMAGE_WITH_TAG"
+
+    - name: Publish Report Image
+      run: docker push "$REPORT_IMAGE_WITH_TAG"
 
     # Set up Kustomize
     # Kustomize is an optional tool used for managing YAML specs.
@@ -94,6 +118,24 @@ jobs:
         ./kustomize edit set image PROJECT/BOOKS_IMAGE=$BOOKS_IMAGE_WITH_TAG
         kubectl apply -k .
         kubectl rollout status deployment $BOOKS_IMAGE
+    
+    - name: Deploy Library Service
+      run: |-
+        ./kustomize edit set image PROJECT/LIBRARY_IMAGE=$LIBRARY_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $LIBRARY_IMAGE
+
+    - name: Deploy Control Service
+      run: |-
+        ./kustomize edit set image PROJECT/CONTROL_IMAGE=$CONTROL_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $CONTROL_IMAGE
+
+    - name: Deploy Rating Service
+      run: |-
+        ./kustomize edit set image PROJECT/RATING_IMAGE=$RATING_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $RATING_IMAGE
 
     - name: Deploy Gateway Service
       run: |-
@@ -101,17 +143,17 @@ jobs:
         kubectl apply -k .
         kubectl rollout status deployment $GATEWAY_IMAGE
     
-    - name: Deploy Library Service
-      run: |-
-        ./kustomize edit set image PROJECT/LIBRARY_IMAGE=$LIBRARY_IMAGE_WITH_TAG
-        kubectl apply -k .
-        kubectl rollout status deployment $LIBRARY_IMAGE
-    
     - name: Deploy Session Service
       run: |-
         ./kustomize edit set image PROJECT/SESSION_IMAGE=$SESSION_IMAGE_WITH_TAG
         kubectl apply -k .
         kubectl rollout status deployment $SESSION_IMAGE
+
+    - name: Deploy Report Service
+      run: |-
+        ./kustomize edit set image PROJECT/REPORT_IMAGE=$REPORT_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $REPORT_IMAGE
 
     - name: Run API Tests
       id: run-newman
