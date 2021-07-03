@@ -4,6 +4,7 @@
 /rating-service/.gitignore
 /gateway-service/.gitignore
 /session-service/.gitignore
+/report-service/.gitignore
 /frontend/.gitignore
 
 node_modules

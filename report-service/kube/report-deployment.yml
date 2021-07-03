@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report
+  labels:
+    name: report
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: report
+  template:
+    metadata:
+      labels:
+        name: report
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
+      containers:
+        - name: report
+          image: PROJECT/REPORT_IMAGE
+          ports:
+            - containerPort: 8780
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 8780
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 8780
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          env:
+          - name: RAILS_MASTER_KEY
+            valueFrom:
+              secretKeyRef:
+                name: report-secrets
+                key: rails-master-key

@@ -66,6 +66,14 @@ services:
     depends_on:
       - postgres
 
+  report:
+    build: ./report-service
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/report-service
+    ports:
+      - 8780:8780
+
   frontend:
     build: ./frontend
     volumes:
