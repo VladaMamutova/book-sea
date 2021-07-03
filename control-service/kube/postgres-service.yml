@@ -1,0 +1,18 @@
+# To access the deployment or container, we need to expose PostgreSQL service.
+# Kubernetes provides services such as ClusterIP, NodePort and LoadBalancer.
+# With ClusterIP we can access PostgreSQL service within Kubernetes.
+# NodePort gives the ability to expose service endpoint on the Kubernetes nodes.
+# For accessing PostgreSQL externally, we need to use a Load Balancer service type which exposes the service externally.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: control-postgres
+  labels:
+    app: control-postgres
+spec:
+  type: NodePort
+  ports:
+   - port: 5432
+  selector:
+    app: control-postgres

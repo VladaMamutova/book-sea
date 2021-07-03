@@ -1,0 +1,37 @@
+# Database servers are stateful and, therefore, their databases are expected
+# to be persistent. A container, on the other hand, is ephermeral with no
+# expectation for persisting state. This is obviously problemmatic
+# with stateful applications like database servers.
+# A Kubernetes Persistent Volume is a volume that attaches to a Pod
+# or group of Pods. Data written to it persists and is available to
+# any Pod that mounts it. In most use cases it can be thought of
+# as a network filesystem (NFS), as the behaviour is similar.
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: control-postgres-pv-volume
+  labels:
+    type: local
+    app: control-postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data
+---
+# To mount a Persistent Volume to a Pod a Persistent Volume Claim must exist.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: control-postgres-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi

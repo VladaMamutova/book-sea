@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: control
+  labels:
+    name: control
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: control
+  template:
+    metadata:
+      labels:
+        name: control
+    spec:
+      nodeSelector:
+        # indicate that this pod has an affinity for the default-pool node pool,
+        # so it doesn't get scheduled on our db-pool nodes which are reserved
+        # for our postgres pod
+        cloud.google.com/gke-nodepool: default-pool
+      containers:
+        - name: control
+          image: PROJECT/CONTROL_IMAGE # a placeholder value, will be replaced by Kustomize tool
+          ports:
+            - containerPort: 8380
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 8380
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 8380
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 1
+          envFrom:
+            - configMapRef:
+                name: control-postgres-config
+          env:
+          - name: RAILS_MASTER_KEY
+            valueFrom:
+              secretKeyRef:
+                name: control-secrets
+                key: rails-master-key

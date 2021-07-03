@@ -1,5 +1,6 @@
 /books-service/.gitignore
 /library-service/.gitignore
+/control-service/.gitignore
 /rating-service/.gitignore
 /gateway-service/.gitignore
 /session-service/.gitignore
