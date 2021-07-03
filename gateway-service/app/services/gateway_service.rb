@@ -75,6 +75,30 @@ class GatewayService
     BookService.new.remove_book(book_uid)
   end
 
+  def get_authors
+    Rails.logger.info 'Request to Books Service to get authors'
+    BookService.new.get_authors
+
+  rescue RestClient::Unauthorized, RestClient::Forbidden
+    Rails.logger.info 'Request to Book Service for a token'
+    BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
+
+    Rails.logger.info 'Request to Books Service to get authors again'
+    BookService.new.get_authors
+  end
+
+  def get_genres
+    Rails.logger.info 'Request to Books Service to get genres'
+    BookService.new.get_genres
+
+  rescue RestClient::Unauthorized, RestClient::Forbidden
+    Rails.logger.info 'Request to Book Service for a token'
+    BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
+
+    Rails.logger.info 'Request to Books Service to get genres again'
+    BookService.new.get_genres
+  end
+
   def add_book_to_library(book_uid, library_uid, number)
     raise Error::RecordInvalid.new('Validation failed', ['number must be greater than 0']) if number <= 0
 

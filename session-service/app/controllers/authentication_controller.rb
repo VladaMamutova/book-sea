@@ -4,7 +4,7 @@ class AuthenticationController < ApplicationController
     command = AuthenticateUser.call(login, password)
 
     if command.success?
-      render json: { token: command.result }
+      render json: command.result
     else
       render json: command.errors, status: :unauthorized
     end

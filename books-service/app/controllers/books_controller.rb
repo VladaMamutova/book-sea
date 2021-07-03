@@ -26,6 +26,10 @@ class BooksController < ApplicationController
     genre = Genre.find_by(name: params[:genre])
     raise ActiveRecord::RecordNotFound, "Genre '#{params[:genre]}' not found" unless genre
 
+    if author.books.find_by(name: book_params[:name], genre: genre)
+      raise Error::RecordOperationConflict, "Book (name: '#{book_params[:name]}', author: '#{author_params.to_h.values.join(' ')}', genre: '#{params[:genre]}') is already exist"
+    end
+
     @book = Book.new(book_params)
     @book.author = author
     @book.genre = genre
@@ -103,7 +107,7 @@ class BooksController < ApplicationController
   end
 
   def author_params
-    params.require(:author).permit(:first_name, :last_name, :middle_name)
+    params.require(:author).permit(:first_name, :middle_name, :last_name)
   end
 
   def params_to_string(params)

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get '/_health', to: 'application#health'
 
   resources :books
+  resources :genres
   resources :authors do
     resources :books
   end

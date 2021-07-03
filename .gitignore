@@ -2,3 +2,6 @@
 /library-service/.gitignore
 /gateway-service/.gitignore
 /session-service/.gitignore
+/frontend/.gitignore
+
+node_modules
