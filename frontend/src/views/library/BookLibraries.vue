@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto item-center px-16 py-6">
-     <div class="flex justify-center space-x-4">
-       <div class="flex justify-center">
+    <div class="flex justify-center space-x-4">
+      <div class="flex justify-center">
         <div class="flex flex-initial items-center">
           <img img src="@/assets/book.svg" alt="Обложка книги" class="flex-none object-cover" width="140" height="140" />
         </div>
@@ -23,10 +23,10 @@
             Жанр: <span class="text-gray-700"> {{ book.genre }} </span>
           </div>
         </div>
-       </div>
+      </div>
      </div>
     
-    <List class="mt-12">
+    <List v-if="!error" class="mt-12">
       <BookLibraryItem v-for="book_library in book_libraries" :key="book_library.library.library_uid"
         :library="book_library.library" :available_count="book_library.available_count"/>
     </List>
@@ -62,7 +62,7 @@ export default {
     this.book_uid = this.$route.params.book_uid
     this.$http.plain.get('/library/book/'+ this.book_uid)
       .then(response => { this.book_libraries = response.data; })
-      .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
+      .catch(error => this.setError(error, 'Не удалось загрузить список библиотек... Попробуйте позже'))
   },
   methods: {
     setError (error, text) {

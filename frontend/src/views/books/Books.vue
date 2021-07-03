@@ -18,7 +18,15 @@
         <div class="text-red-500 text-base text-xl text-center py-20" v-if="error">{{ error }}</div>
         <div class="text-gray-400 text-base text-xl text-center py-20" v-if="!error && books.length == 0">По данному запросу ничего не найдено</div>
         
-        <List>
+        <div class="flex justify-end mb-8">
+          <router-link to="/books/new" v-if="isAdmin()" class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+            Добавить новую книгу
+          </router-link>
+        </div>
+        <List v-if="isAdmin()">
+          <AdminBookItem v-for="book in books" :key="book.book_uid" :book="book" />
+        </List>
+         <List v-else>
           <BookItem v-for="book in books" :key="book.book_uid" :book="book" />
         </List>
       </div>
@@ -30,13 +38,15 @@
 <script>
 
 import List from '@/components/List.vue'
+import AdminBookItem from '@/components/admin/books/BookItem.vue'
 import BookItem from '@/components/books/BookItem.vue'
 
 export default {
   name: 'Books',
   components: {
     List,
-    BookItem
+    BookItem,
+    AdminBookItem
   },
   data () {
     return {
@@ -59,6 +69,9 @@ export default {
   methods: {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.message) || text
+    },
+    isAdmin() {
+      return localStorage.signedIn && localStorage.role === "admin"
     },
     findBooks() {
       this.$router.replace({ name: 'Books', query: this.search_params })

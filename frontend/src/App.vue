@@ -8,18 +8,18 @@
           </a>
           
           <nav class="md:flex space-x-10">
-            <router-link to="/books" class="text-base font-medium text-gray-700 hover:text-gray-900">Книги</router-link>
-            <router-link to="/library" class="text-base font-medium text-gray-700 hover:text-gray-900">Библиотеки</router-link>
+            <router-link to="/books" class="text-lg font-medium text-gray-700 hover:text-gray-900">Книги</router-link>
+            <router-link to="/library" class="text-lg font-medium text-gray-700 hover:text-gray-900">Библиотеки</router-link>
           </nav>
 
           <div v-if="!signedIn && !isSignedIn()" class="md:flex items-center justify-end md:flex-1 lg:w-0">
-            <router-link to="/sign_in" class="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">Вход</router-link>
-            <a href="#" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+            <router-link to="/sign_in" class="whitespace-nowrap text-lg font-medium text-gray-500 hover:text-gray-900">Вход</router-link>
+            <a href="#" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
               Регистрация
             </a>
           </div>
           <div v-else class="md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a href="#" class="flex whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900 cursor-pointer">
+            <a href="#" class="flex whitespace-nowrap text-lg font-medium text-gray-500 hover:text-gray-900 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>

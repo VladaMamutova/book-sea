@@ -21,6 +21,16 @@ const routes = [
     props: (route) => ({ name: route.query.name, author: route.query.name })
   },
   {
+    path: '/books/new',
+    name: 'NewBook',
+    component: () => import("../views/admin/books/NewBook.vue")
+  },
+  {
+    path: '/books/:book_uid/edit',
+    name: 'EditBook',
+    component: () => import("../views/admin/books/EditBook.vue")
+  },
+  {
     path: '/library',
     name: 'Libraries',
     component: () => import("../views/library/Libraries.vue")
