@@ -13,4 +13,5 @@ Rails.application.routes.draw do
   post '/libraries/:library_uid/book/:book_uid/return', to: 'taken_books#return_book'
 
   get '/taken_books/user/:user_uid', to: 'taken_books#show_user_taken_books'
+  delete "/taken_books/:taken_book_uid", to: 'taken_books#destroy'
 end

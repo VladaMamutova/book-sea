@@ -41,3 +41,9 @@ spec:
               secretKeyRef:
                 name: gateway-secrets
                 key: rails-master-key
+          env:
+          - name: SESSION_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: gateway-secrets
+                key: session-key

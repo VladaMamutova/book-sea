@@ -1,5 +1,5 @@
 class TakenBooksController < ApplicationController
-  before_action :set_library, except: :show_user_taken_books
+  before_action :set_library, except: %i[show_user_taken_books destroy]
   before_action :set_library_book, only: %i[take_book return_book]
 
   protect_from_forgery with: :null_session
@@ -13,20 +13,29 @@ class TakenBooksController < ApplicationController
 
   # POST libraries/:library_uid/book/:book_uid/take
   def take_book
-    # todo: get user_uid from jwt token
-    user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
-    taken_book = TakenBookService.new.take(user_uid, @library_book)
+    taken_book = TakenBookService.new.take(params[:user_uid], @library_book)
 
     render json: taken_book, status: :ok
   end
 
   # POST libraries/:library_uid/book/:book_uid/return
   def return_book
-    # todo: get user_uid from jwt token
-    user_uid = '362c5679-48b8-4741-9dc1-44a7472f51f3'
-    TakenBookService.new.return(user_uid, @library_book, params[:status])
+    TakenBookService.new.return(params[:user_uid], @library_book, params[:status])
 
     head :ok
+  end
+
+  # DELETE /taken_books/:taken_book_uid
+  def destroy
+    @taken_book = TakenBook.find_by(taken_book_uid: params[:taken_book_uid]) # nil if not found
+    raise ActiveRecord::RecordNotFound, "Taken Book '#{params[:taken_book_uid]}' not found" unless @taken_book
+
+    library = Library.find_by(library_uid: @taken_book.library_uid)
+    LibraryBookService.new.add_one_if_exist(library, @taken_book.book_uid)
+
+    @taken_book.destroy
+
+    head :no_content
   end
 
   private

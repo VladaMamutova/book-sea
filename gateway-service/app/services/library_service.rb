@@ -17,7 +17,7 @@ class LibraryService
 
   def add_book_to_library(book_uid, library_uid, number)
     url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}"
-    params = { number: number }
+    params = { number: number }.to_json
     response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   end
@@ -26,15 +26,16 @@ class LibraryService
     RestClient.delete "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}"
   end
 
-  def take_book_from_library(book_uid, library_uid)
+  def take_book(user_uid, book_uid, library_uid)
     url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}/take"
-    response = RestClient.post url, {}, { accept: :json }
+    params = { user_uid: user_uid }.to_json
+    response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   end
 
-  def return_book_to_library(book_uid, library_uid, status)
+  def return_book(user_uid, book_uid, library_uid, status)
     url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}/return"
-    params = { status: status }
+    params = { user_uid: user_uid, status: status }.to_json
     RestClient.post url, params, { content_type: :json, accept: :json }
   end
 
@@ -42,5 +43,9 @@ class LibraryService
     url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/books/#{book_uid}"
     response = RestClient.get url, { accept: :json }
     JSON.parse(response.body)
+  end
+
+  def remove_taken_book(taken_book_uid)
+    RestClient.delete "#{LIBRARY_SERVICE_URL}/taken_books/#{taken_book_uid}"
   end
 end

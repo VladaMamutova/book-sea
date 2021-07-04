@@ -119,4 +119,5 @@ Rails.application.configure do
 
   config.books_service_url = 'http://34.77.157.32'
   config.library_service_url = 'http://35.205.133.66'
+  config.control_service_url = 'http://34.140.132.99'
 end

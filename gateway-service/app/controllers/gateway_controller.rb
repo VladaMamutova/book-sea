@@ -1,4 +1,8 @@
 class GatewayController < ApplicationController
+  before_action :check_authorization, only: %i[find_book_in_libraries]
+  before_action :check_user_rights, only: %i[take_book return_book show_rating]
+  before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library]
+  
   skip_before_action :verify_authenticity_token # fix!!!
 
   # GET /books/:book_uid
@@ -88,7 +92,7 @@ class GatewayController < ApplicationController
 
   # POST /library/:library_uid/book/:book_uid/take
   def take_book
-    taken_book = LibraryService.new.take_book_from_library(params[:book_uid], params[:library_uid])
+    taken_book = GatewayService.new.take_book(@user_uid, params[:book_uid], params[:library_uid])
 
     render json: taken_book, status: :ok
   end
@@ -96,7 +100,7 @@ class GatewayController < ApplicationController
   # POST /library/:library_uid/book/:book_uid/return
   def return_book
     status = params[:status].to_s
-    LibraryService.new.return_book_to_library(params[:book_uid], params[:library_uid], status)
+    LibraryService.new.return_book_to_library(@user_uid, params[:book_uid], params[:library_uid], status)
 
     head :ok
   end
@@ -112,5 +116,29 @@ class GatewayController < ApplicationController
 
   def book_params
     params.permit(:name, :genre, { author: %i[first_name last_name middle_name] })
+  end
+
+  def check_authorization
+    Rails.logger.info 'Check authorization before API request'
+    command = AuthorizeApiRequest.call(request.headers)
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
+  end
+
+  def check_user_rights
+    Rails.logger.info 'Check user rights before API request'
+    command = AuthorizeApiRequest.call(request.headers, 'user')
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
+  end
+
+  def check_admin_rights
+    Rails.logger.info 'Check admin rights before API request'
+    command = AuthorizeApiRequest.call(request.headers, 'admin')
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
   end
 end

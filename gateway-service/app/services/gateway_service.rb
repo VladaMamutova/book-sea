@@ -170,6 +170,22 @@ class GatewayService
     libraries
   end
 
+  def take_book(user_uid, book_uid, library_uid)
+    Rails.logger.info "Request to Library Service to take book '#{book_uid}' from library '#{library_uid}' for user '#{user_uid}'"
+    taken_book = LibraryService.new.take_book(user_uid, book_uid, library_uid)
+
+    begin
+      Rails.logger.info "Request to Control Service to add taken book '#{taken_book['taken_book_uid']}' for user '#{user_uid}'"
+      ControlService.new.add_taken_book(user_uid, taken_book['taken_book_uid'])
+      taken_book
+    rescue RestClient::ExceptionWithResponse => e
+      Rails.logger.info "Error: #{extract_message(e.response)}"
+      Rails.logger.info "Request to Library Service to remove taken book '#{taken_book['taken_book_uid']}'"
+      LibraryService.new.remove_taken_book(taken_book['taken_book_uid'])
+      raise e
+    end
+  end
+
   private
 
   def get_book_libraries(book_uid)

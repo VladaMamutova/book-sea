@@ -10,6 +10,15 @@ class LibraryBookService
     library_book
   end
 
+  def add_one_if_exist(library, book_uid)
+    library_book = get_library_book(library, book_uid)
+    if library_book.present?
+      library_book.update!(available_count: library_book.available_count + 1)
+    end
+
+    library_book
+  end
+
   def remove(library_book)
     book_uid = library_book.book_uid
     library_uid = library_book.library.library_uid
