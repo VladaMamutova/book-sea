@@ -1,6 +1,6 @@
 class GatewayController < ApplicationController
   before_action :check_authorization, only: %i[find_book_in_libraries]
-  before_action :check_user_rights, only: %i[take_book return_book show_rating]
+  before_action :check_user_rights, only: %i[take_book return_book show_rating show_taken_books]
   before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library]
   
   skip_before_action :verify_authenticity_token # fix!!!
@@ -100,9 +100,17 @@ class GatewayController < ApplicationController
   # POST /library/:library_uid/book/:book_uid/return
   def return_book
     status = params[:status].to_s
-    LibraryService.new.return_book_to_library(@user_uid, params[:book_uid], params[:library_uid], status)
+    return_info = GatewayService.new.return_book_to_library(@user_uid, params[:book_uid], params[:library_uid], status)
 
-    head :ok
+    render json: return_info
+  end
+
+  # GET /library/user/:user_uid/books
+  def show_taken_books
+    status = params[:status].to_s
+    taken_books = GatewayService.new.show_taken_books(@user_uid)
+
+    render json: taken_books
   end
 
   # GET /library/book/:book_uid
@@ -110,6 +118,12 @@ class GatewayController < ApplicationController
     book_libraries = GatewayService.new.find_book_in_libraries(params[:book_uid])
 
     render json: book_libraries, status: :ok
+  end
+
+  def show_user_rating
+    rating = GatewayService.new.show_user_rating(params[:user_uid])
+
+    render json: rating, status: :ok
   end
 
   private

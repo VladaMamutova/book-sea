@@ -70,4 +70,5 @@ Rails.application.configure do
   config.books_service_url = 'http://books:8180'
   config.library_service_url = 'http://library:8280'
   config.control_service_url = 'http://control:8380'
+  config.rating_service_url = 'http://rating:8480'
 end

@@ -30,12 +30,12 @@ class LibraryBookService
     library_book.destroy
   end
 
-  private
-
   def get_library_book(library, book_uid)
     library.library_books.find_by(book_uid: book_uid) # nil if not found
     # == LibraryBook.find_by(library_id: library.id, book_uid: book_uid)
   end
+
+  private
 
   def create_library_book(library, book_uid, number)
     library.library_books.create!(

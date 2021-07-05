@@ -2,11 +2,13 @@ class LibraryService
   LIBRARY_SERVICE_URL = Rails.configuration.library_service_url
   private_constant :LIBRARY_SERVICE_URL
 
-  # Специфические ошибки запроса будут обработаны в ErrorHandler,
-  # в общих случаях кидаем LibraryProcessError.
-
   def show_libraries
     response = RestClient.get "#{LIBRARY_SERVICE_URL}/libraries"
+    JSON.parse(response.body)
+  end
+
+  def get_library_info(library_uid)
+    response = RestClient.get "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}"
     JSON.parse(response.body)
   end
 
@@ -36,7 +38,8 @@ class LibraryService
   def return_book(user_uid, book_uid, library_uid, status)
     url = "#{LIBRARY_SERVICE_URL}/libraries/#{library_uid}/book/#{book_uid}/return"
     params = { user_uid: user_uid, status: status }.to_json
-    RestClient.post url, params, { content_type: :json, accept: :json }
+    response = RestClient.post url, params, { content_type: :json, accept: :json }
+    JSON.parse(response.body)
   end
 
   def get_library_book_info(library_uid, book_uid)
@@ -45,7 +48,22 @@ class LibraryService
     JSON.parse(response.body)
   end
 
+  def get_taken_book_info(taken_book_uid)
+    response = RestClient.get "#{LIBRARY_SERVICE_URL}/taken_books/#{taken_book_uid}"
+    JSON.parse(response.body)
+  end
+
   def remove_taken_book(taken_book_uid)
     RestClient.delete "#{LIBRARY_SERVICE_URL}/taken_books/#{taken_book_uid}"
+  end
+
+  def cancel_return(taken_book_uid)
+    url = "#{LIBRARY_SERVICE_URL}/taken_books/#{taken_book_uid}/cancel_return"
+    RestClient.post url, {}
+  end
+
+  def user_books_sum(user_uid)
+    response = RestClient.get "#{LIBRARY_SERVICE_URL}taking_books/user/#{user_uid}/sum"
+    JSON.parse(response.body)
   end
 end

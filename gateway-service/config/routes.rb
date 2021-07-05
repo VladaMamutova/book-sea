@@ -17,4 +17,7 @@ Rails.application.routes.draw do
   delete '/library/:library_uid/book/:book_uid', to: 'gateway#remove_book_from_library'
   post '/library/:library_uid/book/:book_uid/take', to: 'gateway#take_book'
   post '/library/:library_uid/book/:book_uid/return', to: 'gateway#return_book'
+  get '/library/user/:user_uid/books', to: 'gateway#show_taken_books'
+
+  get '/rating/user/:user_uid', to: 'gateway#show_user_rating'
 end

@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   get '/control/user/:user_uid/taken_books', to: 'user_monitoring#get_taken_books'
   post '/control/user/:user_uid/taken_books', to: 'user_monitoring#add_taken_book'
   delete '/control/user/:user_uid/taken_books/:taken_book_uid', to: 'user_monitoring#remove_taken_book'
+  patch '/control/user/:user_uid', to: 'user_monitoring#update_limit'
 end

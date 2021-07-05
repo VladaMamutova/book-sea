@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   get '/_health', to: 'application#health'
 
   get '/rating/user/:user_uid', to: 'ratings#show'
-  post '/rating/user', to: 'ratings#create'
+  post '/rating/user/:user_uid', to: 'ratings#create'
+  post '/rating/user/:user_uid/update', to: 'ratings#update_score'
 end

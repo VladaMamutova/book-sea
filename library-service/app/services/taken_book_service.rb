@@ -1,4 +1,6 @@
 class TakenBookService
+  RENTAL_PERIOD = 10
+
   def take(user_uid, library_book)
     available_count = library_book.available_count
     raise Error::RecordNotAvailable, "Book '#{library_book.book_uid}' is not available" unless available_count.positive?
@@ -21,7 +23,7 @@ class TakenBookService
     ActiveRecord::Base.transaction do
       book_uid = library_book.book_uid
       library_uid = library_book.library.library_uid
-      taken_book = TakenBook.find_by(user_uid: user_uid, book_uid: book_uid, library_uid: library_uid, status: 'new')
+      taken_book = TakenBook.where(user_uid: user_uid, book_uid: book_uid, library_uid: library_uid, status: 'new').last
       unless taken_book
         raise ActiveRecord::RecordNotFound,
               "Taken Book (book uid: '#{book_uid}', library uid: #{library_uid}, status: 'new') not found for user '#{user_uid}'"
@@ -31,6 +33,15 @@ class TakenBookService
 
       taken_book.update!(status: status)
       library_book.update(available_count: library_book.available_count + 1) if status != 'lost'
+
+      return_info = {
+        taken_book_uid: taken_book.taken_book_uid,
+        take_date: taken_book.created_at,
+        return_date: taken_book.updated_at,
+        status: taken_book.status,
+        in_time: (taken_book.updated_at.to_date - taken_book.created_at.to_date).to_i <= RENTAL_PERIOD,
+        good_condition: taken_book.status == 'used'
+      }
     end
   end
 

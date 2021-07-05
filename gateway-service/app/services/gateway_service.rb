@@ -142,8 +142,8 @@ class GatewayService
         book = get_book_info(book_uid)
         book['available_count'] = available_count
         books << book
-      rescue RestClient::ExceptionWithResponse => e
-        Rails.logger.info "Error: #{extract_message(e.response)}"
+      rescue StandardError => e
+        Rails.logger.info "Error: #{e.message}"
       end
     end
 
@@ -159,12 +159,12 @@ class GatewayService
       library_uids.each do |library_uid|
         begin
           libraries << LibraryService.new.get_library_book_info(library_uid, book_uid)
-        rescue RestClient::ExceptionWithResponse => e
-          Rails.logger.info "Error: #{extract_message(e.response)}"
+        rescue StandardError => e
+          Rails.logger.info "Error: #{e.message}"
         end
       end
-    rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.info "Error: #{extract_message(e.response)}"
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
     end
 
     libraries
@@ -178,12 +178,101 @@ class GatewayService
       Rails.logger.info "Request to Control Service to add taken book '#{taken_book['taken_book_uid']}' for user '#{user_uid}'"
       ControlService.new.add_taken_book(user_uid, taken_book['taken_book_uid'])
       taken_book
-    rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.info "Error: #{extract_message(e.response)}"
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
       Rails.logger.info "Request to Library Service to remove taken book '#{taken_book['taken_book_uid']}'"
       LibraryService.new.remove_taken_book(taken_book['taken_book_uid'])
       raise e
     end
+  end
+
+  def return_book_to_library(user_uid, book_uid, library_uid, status)
+    Rails.logger.info "Request to Library Service to return book '#{book_uid}' from library '#{library_uid}' for user '#{user_uid}'"
+    returned_book = LibraryService.new.return_book(user_uid, book_uid, library_uid, status)
+
+    return_info = {
+      taken_book_uid: returned_book['taken_book_uid'],
+      in_time: returned_book['in_time'],
+      good_condition: returned_book['good_condition']
+    }
+    begin
+      Rails.logger.info "Request to Control Service to remove taken book '#{returned_book['taken_book_uid']}' for user '#{user_uid}'"
+      ControlService.new.remove_taken_book(user_uid, returned_book['taken_book_uid'])
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
+      Rails.logger.info "Request to Library Service to cancel return of taken book '#{returned_book['taken_book_uid']}'"
+      LibraryService.new.cancel_return(returned_book['taken_book_uid'])
+      raise e
+    end
+
+    begin      
+      Rails.logger.info "Request to Rating Service to update score for user '#{user_uid}'"
+      rating = RatingService.new.update_score(user_uid, returned_book['in_time'], returned_book['good_condition'])
+      return_info['rating_status'] = rating['status']
+      return_info['rating_score'] = rating['score']
+      return_info['rating_operation'] = rating['operation']
+      return_info['limit'] = rating['limit']
+
+      if rating['operation'] != 'none'
+        Rails.logger.info "Request to Control Service to update the limit of taken books for user '#{user_uid}'"
+        ControlService.new.update_limit(user_uid, rating['limit'])     
+      end
+  
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
+    end
+
+    return_info
+  end
+
+  def show_taken_books(user_uid)
+    taken_books = []
+
+    begin
+      Rails.logger.info "Request to Control Service to get taken books by user '#{user_uid}'"
+      taken_book_uids = ControlService.new.show_taken_books(user_uid)
+
+      taken_book_uids.each do |taken_book_uid|
+        Rails.logger.info "Processing user '#{user_uid}' taken book '#{taken_book_uid}'"
+        taken_book = { taken_book_uid: taken_book_uid }
+        begin
+          Rails.logger.info "Request to Library Service to get taken book '#{taken_book_uid}'"
+          taken_book_info = LibraryService.new.get_taken_book_info(taken_book_uid)
+          taken_book['take_date'] = taken_book_info['take_date']
+
+          begin
+            Rails.logger.info "Request to Book Service to get book '#{taken_book_info['book_uid']}' for taken book '#{taken_book_uid}'"
+            book = get_book_info(taken_book_info['book_uid'])
+            taken_book['book_uid'] = book['book_uid']
+            taken_book['book_name'] = book['name']
+          rescue StandardError => e
+            Rails.logger.info "Error: #{e.message}"
+          end
+
+          begin
+            Rails.logger.info "Request to Library Service to get library '#{taken_book_info['library_uid']}' for taken book '#{taken_book_uid}'"
+            library = LibraryService.new.get_library_info(taken_book_info['library_uid'])
+            taken_book['library_uid'] = library['library_uid']
+            taken_book['library_name'] = library['name']
+          rescue StandardError => e
+            Rails.logger.info "Error: #{e.message}"
+          end
+
+          taken_books << taken_book
+        rescue StandardError => e
+          Rails.logger.info "Error: #{e.message}"
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
+    end
+
+    taken_books
+  end
+
+  def show_user_rating(user_uid)
+    Rails.logger.info "Request to Rating Service to get user '#{user_uid}' rating"
+    RatingService.new.show_user_rating(user_uid)
   end
 
   private
