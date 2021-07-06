@@ -9,7 +9,7 @@
     </div>
 
     <List class="mt-6">
-      <LibraryBookItem v-for="library_book in library_books" :key="library_book.book_uid" :library_book="library_book" :book_uid="library_book.book_uid" />
+      <LibraryBookItem v-for="library_book in library_books" :key="library_book.book_uid" :library_book="library_book" :book_uid="library_book.book_uid" :library_uid="library.library_uid" />
     </List>
 
   </div>
@@ -46,7 +46,7 @@ export default {
   methods: {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.message) || text
-    },
+    }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 class RatingSerializer < ActiveModel::Serializer
-  attributes :user_uid, :status, :limit, :score
+  attributes :status, :limit, :score
 
   def status
     object.status.rank

@@ -30,7 +30,7 @@ class AuthorizeApiRequest
 
   def http_auth_header
     pattern = /^Bearer /
-    header  = headers['Authorization']
+    header = headers['Authorization']
     return header.gsub(pattern, '') if header && header.match(pattern)
 
     errors.add(:message, 'Missing token')

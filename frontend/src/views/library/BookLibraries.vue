@@ -28,7 +28,7 @@
     
     <List v-if="!error" class="mt-12">
       <BookLibraryItem v-for="book_library in book_libraries" :key="book_library.library.library_uid"
-        :library="book_library.library" :available_count="book_library.available_count"/>
+        :library="book_library.library" :available_count="book_library.available_count" :book_uid="book_uid"/>
     </List>
 
   </div>
@@ -60,7 +60,7 @@ export default {
   },
   created () {
     this.book_uid = this.$route.params.book_uid
-    this.$http.plain.get('/library/book/'+ this.book_uid)
+    this.$http.secured.get('/library/book/'+ this.book_uid)
       .then(response => { this.book_libraries = response.data; })
       .catch(error => this.setError(error, 'Не удалось загрузить список библиотек... Попробуйте позже'))
   },

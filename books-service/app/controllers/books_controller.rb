@@ -67,6 +67,9 @@ class BooksController < ApplicationController
   end
 
   def destroy
+    if @book.libraries.present?
+      raise Error::RecordOperationConflict, "The book '#{@book.book_uid}' is stored in #{@book.libraries.length} libraries"
+    end
     @book.destroy
     head :no_content
   end

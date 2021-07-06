@@ -7,9 +7,9 @@ class RatingService
     JSON.parse(response.body)
   end
 
-  def update_score(user_uid, in_time, good_condition)
+  def update_score(user_uid, in_time, status)
     url = "#{RATING_SERVICE_URL}/rating/user/#{user_uid}/update"
-    params = { in_time: in_time, good_condition: good_condition }.to_json
+    params = { in_time: in_time, status: status }.to_json
     response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   end

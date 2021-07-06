@@ -59,7 +59,7 @@ export default {
         this.signInFailed(response)
         return
       }
-      localStorage.csrf = response.data.token
+      localStorage.token = response.data.token
       localStorage.signedIn = true
       localStorage.userLogin = this.login
       localStorage.role = response.data.role
@@ -71,7 +71,7 @@ export default {
     },
     signInFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.message) || 'Неверный логин или пароль'
-      delete localStorage.csrf
+      delete localStorage.token
       delete localStorage.signedIn
       delete localStorage.userLogin
       delete localStorage.role
