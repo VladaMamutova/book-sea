@@ -28,12 +28,11 @@ const securedAxiosInstance = axios.create({
 })
 
 securedAxiosInstance.interceptors.request.use(config => {
-  console.log("secured: method = " + config.method)
   const method = config.method.toUpperCase()
-  if (method !== 'OPTIONS' && method !== 'GET') {
+  if (method !== 'OPTIONS') {
     config.headers = {
       ...config.headers,
-      'Bearer': localStorage.csrf
+      Authorization: `Bearer ${localStorage.token}`
     }
   }
   return config
@@ -42,17 +41,18 @@ securedAxiosInstance.interceptors.request.use(config => {
 securedAxiosInstance.interceptors.response.use(null, error => {
   if (error.response && error.response.config &&
      (error.response.status === 401 || error.response.status === 403)) {
+       
     // TODO: запрос на обновление токена.
-    // return plainAxiosInstance.post('/refresh', {}, { headers: { 'Bearer': localStorage.csrf } })
+    // return plainAxiosInstance.post('/refresh', {}, { headers: { 'Bearer': localStorage.token } })
     //   .then(response => {
-    //     localStorage.csrf = response.data.token
+    //     localStorage.token = response.data.token
     //     localStorage.signedIn = true
     //     // After another successfull refresh - repeat original request
     //     let retryConfig = error.response.config
-    //     retryConfig.headers['Bearer'] = localStorage.csrf
+    //     retryConfig.headers['Bearer'] = localStorage.token
     //     return plainAxiosInstance.request(retryConfig)
     //   }).catch(error => {
-        delete localStorage.csrf
+        delete localStorage.token
         delete localStorage.signedIn
         delete localStorage.userLogin
         delete localStorage.role

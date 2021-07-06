@@ -4,13 +4,11 @@ class TakenBookSerializer < ActiveModel::Serializer
   attribute :status
 
   def take_date
-    object.created_at.strftime('%F %T')
-    # %F - The ISO 8601 date format (%Y-%m-%d)
-    # %T - 24-hour time (%H:%M:%S)
+    object.created_at.strftime("%d.%m.%Y в %H:%M")
   end
 
   def return_date
-    object.updated_at.strftime('%F %T')
+    object.updated_at.strftime("%d.%m.%Y в %H:%M")
   end
 
   def returned?

@@ -192,8 +192,9 @@ class GatewayService
 
     return_info = {
       taken_book_uid: returned_book['taken_book_uid'],
+      return_date: returned_book['return_date'],
       in_time: returned_book['in_time'],
-      good_condition: returned_book['good_condition']
+      status: returned_book['status']
     }
     begin
       Rails.logger.info "Request to Control Service to remove taken book '#{returned_book['taken_book_uid']}' for user '#{user_uid}'"
@@ -207,11 +208,11 @@ class GatewayService
 
     begin      
       Rails.logger.info "Request to Rating Service to update score for user '#{user_uid}'"
-      rating = RatingService.new.update_score(user_uid, returned_book['in_time'], returned_book['good_condition'])
+      rating = RatingService.new.update_score(user_uid, returned_book['in_time'], returned_book['status'])
       return_info['rating_status'] = rating['status']
       return_info['rating_score'] = rating['score']
       return_info['rating_operation'] = rating['operation']
-      return_info['limit'] = rating['limit']
+      return_info['book_limit'] = rating['limit']
 
       if rating['operation'] != 'none'
         Rails.logger.info "Request to Control Service to update the limit of taken books for user '#{user_uid}'"
@@ -240,20 +241,21 @@ class GatewayService
           taken_book_info = LibraryService.new.get_taken_book_info(taken_book_uid)
           taken_book['take_date'] = taken_book_info['take_date']
 
+          taken_book['book_uid'] = taken_book_info['book_uid']
           begin
             Rails.logger.info "Request to Book Service to get book '#{taken_book_info['book_uid']}' for taken book '#{taken_book_uid}'"
             book = get_book_info(taken_book_info['book_uid'])
-            taken_book['book_uid'] = book['book_uid']
-            taken_book['book_name'] = book['name']
+            taken_book['name'] = book['name']
+            taken_book['author'] = book['author']
           rescue StandardError => e
             Rails.logger.info "Error: #{e.message}"
           end
 
+          taken_book['library_uid'] = taken_book_info['library_uid']
           begin
             Rails.logger.info "Request to Library Service to get library '#{taken_book_info['library_uid']}' for taken book '#{taken_book_uid}'"
             library = LibraryService.new.get_library_info(taken_book_info['library_uid'])
-            taken_book['library_uid'] = library['library_uid']
-            taken_book['library_name'] = library['name']
+            taken_book['library'] = library['name']
           rescue StandardError => e
             Rails.logger.info "Error: #{e.message}"
           end

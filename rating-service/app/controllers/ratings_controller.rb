@@ -18,12 +18,13 @@ class RatingsController < ApplicationController
     new_score = @rating.score
     status = @rating.status
     operation = "none"
-    if (params[:in_time] && params[:good_condition])
+    if (params[:in_time] && params[:status] == 'used')
       new_score += 1
       new_status = increase_status(status, new_score)
       operation = "increased" if new_status != status
     else
       new_score -= 1 if new_score > 0
+      new_score -= 1 if new_score > 0 && params[:status] == 'lost'
       new_status = decrease_status(status, new_score)
       operation = "decreased" if new_status != status
     end

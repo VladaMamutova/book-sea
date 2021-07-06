@@ -1,6 +1,6 @@
 class GatewayController < ApplicationController
   before_action :check_authorization, only: %i[find_book_in_libraries]
-  before_action :check_user_rights, only: %i[take_book return_book show_rating show_taken_books]
+  before_action :check_user_rights, only: %i[take_book return_book show_user_rating show_taken_books]
   before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library]
   
   skip_before_action :verify_authenticity_token # fix!!!
@@ -105,9 +105,8 @@ class GatewayController < ApplicationController
     render json: return_info
   end
 
-  # GET /library/user/:user_uid/books
+  # GET /library/user/books
   def show_taken_books
-    status = params[:status].to_s
     taken_books = GatewayService.new.show_taken_books(@user_uid)
 
     render json: taken_books
@@ -121,7 +120,7 @@ class GatewayController < ApplicationController
   end
 
   def show_user_rating
-    rating = GatewayService.new.show_user_rating(params[:user_uid])
+    rating = GatewayService.new.show_user_rating(@user_uid)
 
     render json: rating, status: :ok
   end
@@ -149,7 +148,7 @@ class GatewayController < ApplicationController
   end
 
   def check_admin_rights
-    Rails.logger.info 'Check admin rights before API request'
+    Rails.logger.info 'Check admin rights before API request'    
     command = AuthorizeApiRequest.call(request.headers, 'admin')
     raise Error::NotAuthorized, command.errors[:message].first if !command.success?
 

@@ -1,6 +1,6 @@
 class BookFilter < ApplicationService
   START_PAGE = 0
-  BOOKS_PER_PAGE = 20
+  BOOKS_PER_PAGE = 30
 
   attr_reader :filter_params, :page, :per_page
 

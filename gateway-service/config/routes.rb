@@ -11,13 +11,13 @@ Rails.application.routes.draw do
   get '/genres', to: 'gateway#show_genres'
 
   get '/library', to: 'gateway#show_libraries'
+  get '/library/user/books', to: 'gateway#show_taken_books'
   get '/library/:library_uid/books', to: 'gateway#show_library_books'
   get '/library/book/:book_uid', to: 'gateway#find_book_in_libraries'
   post '/library/:library_uid/book/:book_uid', to: 'gateway#add_book_to_library'
   delete '/library/:library_uid/book/:book_uid', to: 'gateway#remove_book_from_library'
   post '/library/:library_uid/book/:book_uid/take', to: 'gateway#take_book'
   post '/library/:library_uid/book/:book_uid/return', to: 'gateway#return_book'
-  get '/library/user/:user_uid/books', to: 'gateway#show_taken_books'
 
-  get '/rating/user/:user_uid', to: 'gateway#show_user_rating'
+  get '/rating/user', to: 'gateway#show_user_rating'
 end
