@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+data:
+  enabled_plugins: |
+      [rabbitmq_management,rabbitmq_peer_discovery_k8s].
+
+  rabbitmq.conf: |
+      cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+      cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+      cluster_formation.k8s.port = 443
+      cluster_formation.k8s.address_type = hostname
+      cluster_formation.node_cleanup.interval = 10
+      cluster_formation.node_cleanup.only_log_warning = true
+      cluster_partition_handling = autoheal
+      queue_master_locator=min-masters
+      cluster_formation.randomized_startup_delay_range.min = 0
+      cluster_formation.randomized_startup_delay_range.max = 2
+      cluster_formation.k8s.service_name = rabbitmq-internal
+      cluster_formation.k8s.hostname_suffix = .rabbitmq-internal.our-namespace.svc.cluster.local
+
+# Добавляем нужные плагины в разрешенные к загрузке, чтобы использовать автоматический Peer Discovery в K8S.
+#  enabled_plugins: |
+#      [rabbitmq_management,rabbitmq_peer_discovery_k8s].
+
+# Выставляем в качестве backend для peer discovery нужный плагин.
+# cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+
+# Указываем адрес и порт, через которые можно подключиться к kubernetes apiserver.
+# Для этого воспользуемся kubectl get services:
+# kubernetes          ClusterIP      10.3.240.1     <none>           443/TCP 
+# По умолчанию service с именем kubernetes, ведущий на k8-apiserver,
+# создаётся в namespace default с портом 443.
+# cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+# cluster_formation.k8s.port = 443
+
+# По умолчанию тип адресации нод кластера RabbitMQ по ip-адресу.
+# Но при перезапуске pod он каждый раз получает новый IP.
+# # cluster_formation.k8s.address_type = ip # после перезапуска не будет работать
+# Меняем адресацию на hostname. StatefulSet гарантирует неизменность
+# hostname в рамках жизненного цикла всего StatefulSet.
+# cluster_formation.k8s.address_type = hostname
+
+# Поскольку при потере одной из нод мы предполагаем, что она рано или поздно восстановится,
+# отключаем самоудаление кластером недоступных нод. В этом случае, как только нода вернётся
+# в онлайн, она войдёт в кластер без потери своего предыдущего состояния.
+# cluster_formation.node_cleanup.interval = 10
+# cluster_formation.node_cleanup.only_log_warning = true
+
+# Определяем действия кластера при потере кворума.
+# cluster_partition_handling = autoheal
+# In autoheal mode RabbitMQ will automatically decide on a winning partition 
+# if a partition is deemed to have occurred, and will restart all nodes
+# that are not in the winning partition. Unlike pause_minority mode
+# it therefore takes effect when a partition ends, rather than when one starts.
+
+# Определяем выбор мастера для новых очередей.
+# queue_master_locator=min-masters
+# При данной настройке мастером будет выбираться нода с наименьшим количеством очередей,
+# таким образом очереди будут распределяться равномерно по нодам кластера.
+
+# Задаём имя headless сервиса K8s, через который ноды RabbitMQ будут общаться между собой.
+# cluster_formation.k8s.service_name = rabbitmq-internal # из rabbitmq-service.yml
+
+# Чтобы использовать адресацию в кластере по hostname, используем следующую настройку:
+# cluster_formation.k8s.hostname_suffix = .rabbitmq-internal.our-namespace.svc.cluster.local
+# FQDN пода K8s формируется как короткое имя (rabbitmq-0, rabbitmq-1) + суффикс (доменная часть).
+# В K8S суффикс выглядит как .<имя сервиса>.<имя namespace>.svc.cluster.local
+# kube-dns без какой-либо дополнительной настройки резолвит имена
+# вида rabbitmq-0.rabbitmq-internal.our-namespace.svc.cluster.local 
+# в ip-адрес конкретного пода, что и делает возможной всю магию кластеризации по hostname.

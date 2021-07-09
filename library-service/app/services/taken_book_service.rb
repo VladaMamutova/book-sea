@@ -1,5 +1,5 @@
 class TakenBookService
-  RENTAL_PERIOD = 10
+  RENTAL_PERIOD = 14
 
   def take(user_uid, library_book)
     available_count = library_book.available_count
@@ -36,11 +36,10 @@ class TakenBookService
 
       return_info = {
         taken_book_uid: taken_book.taken_book_uid,
-        take_date: taken_book.created_at,
-        return_date: taken_book.updated_at,
+        take_date: taken_book.created_at.strftime("%d.%m.%Y в %H:%M"),
+        return_date: taken_book.updated_at.strftime("%d.%m.%Y в %H:%M"),
         status: taken_book.status,
-        in_time: (taken_book.updated_at.to_date - taken_book.created_at.to_date).to_i <= RENTAL_PERIOD,
-        good_condition: taken_book.status == 'used'
+        in_time: (taken_book.updated_at.to_date - taken_book.created_at.to_date).to_i <= RENTAL_PERIOD
       }
     end
   end

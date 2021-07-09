@@ -1,0 +1,35 @@
+# Для доступа к кластеру RabbitMQ снаружи K8s, прокидываем NodePort.
+# RabbitMQ будет доступен снаружи при обращении к любой ноде кластера K8s
+# по портам 31673 и 30673.
+
+# kubectl port-forward rabbitmq-0 15672
+# http:://localhost:15672
+
+# kubectl describe serviceaccount rabbitmq - посмотреть <secret> в Mountable secrets
+# username="$(kubectl get secret <secret> -o jsonpath='{.data.username}' | base64 --decode)"
+# echo "username: $username"
+# password="$(kubectl get secret <secret> -o jsonpath='{.data.password}' | base64 --decode)"
+# echo "password: $password"
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+    type: LoadBalancer
+spec:
+  type: NodePort
+  ports:
+   - name: http
+     protocol: TCP
+     port: 15672
+     targetPort: 15672
+     nodePort: 31673
+   - name: amqp # amqp://rabbitmq:5672
+     protocol: TCP
+     port: 5672
+     targetPort: 5672
+     nodePort: 30673
+  selector:
+    app: rabbitmq

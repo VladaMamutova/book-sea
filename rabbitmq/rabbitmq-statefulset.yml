@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  serviceName: rabbitmq-internal # из rabbitmq-service.yml
+  replicas: 3 # количетво реплик = число работающих нод
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    # Запрещаем планировщику размещать (в пределах namespace) более одного пода
+    # с тегом app:rabbitmq на каждой ноде.
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - rabbitmq
+            topologyKey: "kubernetes.io/hostname"
+    spec:
+      serviceAccountName: rabbitmq # из rabbitmq-rbac.yml
+      terminationGracePeriodSeconds: 10
+      containers:        
+      - name: rabbitmq-k8s
+        image: rabbitmq:3.7 # стандартный образ RabbitMQ из docker hub
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/rabbitmq
+          - name: rabbitmq-data
+            # Монтируем Persistent Volume Claim в папку
+            mountPath: /var/lib/rabbitmq/mnesia
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 15672
+          - name: amqp
+            protocol: TCP
+            containerPort: 5672
+        livenessProbe:
+          exec:
+            command: ["rabbitmqctl", "status"]
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["rabbitmqctl", "status"]
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 10
+        imagePullPolicy: Always
+        env:
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: RABBITMQ_USE_LONGNAME
+            value: "true"
+          # В качестве идентификатора членов кластера используем FQDN-имя,
+          # формат имени по rabbitmq-configmap.yml
+          - name: RABBITMQ_NODENAME
+            value: "rabbit@$(HOSTNAME).rabbitmq-internal.$(NAMESPACE).svc.cluster.local"
+          - name: K8S_SERVICE_NAME # имя headless сервиса для общения членов кластера
+            value: "rabbitmq-internal"
+          # Содержимое Erlang Cookie должно быть одинаковым на всех нодах кластера.
+          # Нода с отличающимся cookie не сможет войти в кластер.
+          - name: RABBITMQ_ERLANG_COOKIE
+            value: "mycookie"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: rabbitmq-config
+            items:
+            - key: rabbitmq.conf
+              path: rabbitmq.conf
+            - key: enabled_plugins
+              path: enabled_plugins
+        - name: rabbitmq-data # из rabbitmq-pvc.yml
+          persistentVolumeClaim:
+            claimName: rabbitmq-data
+
+# При падении одной из нод K8s statefulset стремится сохранить количество
+# экземпляров в наборе, поэтому создаёт по нескольку подов на одной и той же ноде K8s.
+# Это поведение совершенно нежелательно и в принципе бессмысленно.
+# Поэтому прописываем anti-affinity правило для подов из statefulset.
+# annotations:
+#        scheduler.alpha.kubernetes.io/affinity: >
+# Правило делаем required, чтобы kube-scheduler не мог его нарушать при планировании подов.
+# Суть проста: планировщику запрещено размещать (в пределах namespace) более одного пода
+# с тегом app:rabbitmq на каждой ноде. Ноды различаем по значению метки
+# kubernetes.io/hostname. Теперь если по какой-то причине число работающих нод K8S меньше,
+# чем требуемое количество реплик в StatefulSet, новые реплики не будут создаваться,
+# пока снова не появится свободная нода.
+
+# - name: rabbitmq-data
+#    mountPath: /var/lib/rabbitmq/mnesia
+
+# Персистентные данные у RabbitMQ хранятся в /var/lib/rabbitmq/mnesia.
+# Монтируем наш Persistent Volume Claim в эту папку,
+# чтобы при перезапуске подов/нод или даже всего StatefulSet данные
+# (как служебные, в том числе о собранном кластере, так и пользовательские)
+# оставались в целости и сохранности.
+# Часто персистентной делают папку /var/lib/rabbitmq/ целиком. 
+# Но при этом будет запоминена вся информация, заданная конфигами Rabbit.
+# Поэтому для того, чтобы изменить что-то в конфигурационном файле,
+# требуется почистить персистентное хранилище, что очень неудобно в эксплуатации.
+
+# При недоступности одной из нод кластера, очереди, содержащиеся на ней, 
+# перестанут быть доступны, всё остальное продолжит работу.
+# Как только нода вернётся в строй, она вернётся в кластер,
+# и очереди, для которых она была Master'ом, снова станут
+# работоспособными с сохранением всех содержащихся в них данных
+# (если не сломалось персистентное хранилище). 
+# Все эти процессы проходят полностью автоматически и не требуют вмешательства.
