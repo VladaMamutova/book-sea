@@ -7,22 +7,31 @@ require 'sneakers/tasks'
 
 Rails.application.load_tasks
 
-namespace :rabbitmq do
-  # The rake task initializes the connection between apps throughout RabbitMQ.
-  desc 'Connect consumer to producer'
-  task :setup do
-    require "bunny"
+# namespace :rabbitmq do
+#   # The rake task initializes the connection between apps throughout RabbitMQ.
+#   desc 'Connect consumer to producer'
+#   task :setup do
+#     require "bunny"
 
-    connection = Bunny.new('amqp://guest:guest@rabbitmq')
-    connection.start
+#     # connection = Bunny.new(
+#     #   host:  'localhost',
+#     #   port:  '15672',
+#     #   vhost: '/',
+#     #   user:  'guest',
+#     #   pass:  'guest'
+#     # )
 
-    channel = connection.create_channel
-    queue_taken_books = channel.queue("taken_books", auto_delete: true)
+#     #connection = Bunny.new('amqp://guest:guest@rabbitmq')
+#     #connection = Bunny.new('amqp://guest:guest@localhost:15672')
+#     connection.start
 
-    #queue_restaurants.bind("crawler.restaurants")
-    connection.close
-  end
-end
+#     channel = connection.create_channel
+#     queue_taken_books = channel.queue("taken_books", auto_delete: true)
+
+#     #queue_restaurants.bind("crawler.restaurants")
+#     connection.close
+#   end
+# end
 
 # namespace :rabbitmq do
 #   desc "Setup routing"

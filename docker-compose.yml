@@ -8,6 +8,13 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 15672:15672
+    volumes:
+      - rabbit:/var/lib/rabbitmq
+
   books:
     build: ./books-service
     volumes:
@@ -85,3 +92,4 @@ services:
 
 volumes:
   postgres:
+  rabbit:

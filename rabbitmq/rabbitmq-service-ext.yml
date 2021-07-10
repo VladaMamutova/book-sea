@@ -26,7 +26,7 @@ spec:
      port: 15672
      targetPort: 15672
      nodePort: 31673
-   - name: amqp # amqp://rabbitmq:5672
+   - name: amqp # amqp://rabbitmq:5672 - для приложений внутри кластера
      protocol: TCP
      port: 5672
      targetPort: 5672
