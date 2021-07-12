@@ -10,7 +10,10 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
     ports:
+      - 5672:5672
       - 15672:15672
     volumes:
       - rabbit:/var/lib/rabbitmq
@@ -34,6 +37,7 @@ services:
       - 8280:8280
     depends_on:
       - postgres
+      - rabbitmq
 
   control:
     build: ./control-service
@@ -80,6 +84,9 @@ services:
     working_dir: /usr/src/report-service
     ports:
       - 8780:8780
+    depends_on:
+      - postgres
+      - rabbitmq
 
   frontend:
     build: ./frontend

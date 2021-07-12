@@ -16,7 +16,7 @@ class TakenBookService
       library_book.update(available_count: available_count - 1)
 
       Rails.logger.info "Publish data taken book '#{taken_book.taken_book_uid}' data to taken_books queue"
-      Publisher.publish('taken_books', taken_book.attributes)
+      Publisher.publish('taken_books', TakenBookSerializer.new(taken_book))
 
       taken_book
     end

@@ -4,9 +4,6 @@ class Publisher
     # которой соответствует ключ маршрутизации (direct exchange).
     exchange = channel.default_exchange
     exchange.publish(message.to_json, routing_key: queue_name)
-
-    # exchange = channel.fanout("book_sea.#{exchange}")
-    # exchange.publish(message.to_json)
   end
 
   def self.channel
@@ -17,7 +14,7 @@ class Publisher
 
   def self.connection
     # Открываем соединение с контейнером, в котором запущен rabbitmq
-    @connection ||= Bunny.new('amqp://guest:guest@rabbitmq')
+    @connection ||= Bunny.new('amqp://guest:guest@rabbitmq:5672')
     @connection.start
   end
 end

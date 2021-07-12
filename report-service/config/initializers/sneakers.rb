@@ -5,9 +5,11 @@ module Connection
   def self.sneakers
     @sneakers ||= begin
       Bunny.new(
+        host: 'rabbitmq',
         addresses: 'rabbitmq',
         username: 'guest',
         password: 'guest',
+        port: 5672,
         vhost: '/',
         automatically_recover: true,
         connection_timeout: 2,
