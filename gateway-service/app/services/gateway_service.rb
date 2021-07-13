@@ -277,6 +277,16 @@ class GatewayService
     RatingService.new.show_user_rating(user_uid)
   end
 
+  def show_books_genre_report
+    Rails.logger.info 'Request to Report Service to get books genre report'
+    ReportService.new.books_genre_report
+  end
+
+  def show_books_return_report
+    Rails.logger.info 'Request to Report Service to get books return report'
+    ReportService.new.books_return_report
+  end
+
   private
 
   def get_book_libraries(book_uid)

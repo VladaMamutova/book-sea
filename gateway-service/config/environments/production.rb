@@ -121,4 +121,5 @@ Rails.application.configure do
   config.library_service_url = 'http://35.205.133.66'
   config.control_service_url = 'http://34.140.132.99'
   config.rating_service_url = 'http://35.241.208.172'
+  config.report_service_url = 'http://34.76.185.153'
 end

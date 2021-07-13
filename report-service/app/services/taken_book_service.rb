@@ -21,9 +21,9 @@ class TakenBookService
     end
 
     if @taken_book.save
-      logger.info "Taken Books: Add new taken book: #{@taken_book.attributes}"
+      logger.info "Taken Books: Add new taken book '#{@taken_book.taken_book_uid}': #{@taken_book.attributes}"
     else
-      logger.error "Taken Books: Failed to add new taken book: #{@taken_book.errors.messages}"
+      logger.error "Taken Books: Failed to add new taken book '#{@taken_book.taken_book_uid}': #{@taken_book.errors.messages}"
     end
   end
 end

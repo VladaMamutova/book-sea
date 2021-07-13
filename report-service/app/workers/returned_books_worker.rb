@@ -5,14 +5,13 @@ class ReturnedBooksWorker
   # "returned_books_development" or "returned_books_production"
   from_queue 'returned_books', env: nil
 
-  def work(raw_returned_book)
-    puts "HELLO"
-    data = JSON.parse(raw_returned_book)
-    puts data['message']
-    #TakenBookService.push(raw_taken_book)
-    ack! # we need to let queue know that message was received
+  def work(message)
+    raw_returned_book = JSON.parse(message)
+    logger.info "New message from returned_books queue: #{raw_returned_book}"
+    ReturnedBookService.push(raw_returned_book, logger)
+    ack!
   rescue StandardError => e
-    Rails.logger.info "Error: #{e.message}"
+    logger.error "Error: #{e.message}"
     reject!
   end
 end

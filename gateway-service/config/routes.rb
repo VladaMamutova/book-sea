@@ -19,5 +19,8 @@ Rails.application.routes.draw do
   post '/library/:library_uid/book/:book_uid/take', to: 'gateway#take_book'
   post '/library/:library_uid/book/:book_uid/return', to: 'gateway#return_book'
 
-  get '/rating/user', to: 'gateway#show_user_rating'
+  get '/rating/user', to: 'gateway#show_user_rating' 
+
+  get '/reports/books-genre', to: 'gateway#show_books_genre_report'
+  get '/reports/books_return', to: 'gateway#show_books_return_report'
 end

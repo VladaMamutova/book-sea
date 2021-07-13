@@ -1,8 +1,8 @@
 class GatewayController < ApplicationController
   before_action :check_authorization, only: %i[find_book_in_libraries]
   before_action :check_user_rights, only: %i[take_book return_book show_user_rating show_taken_books]
-  before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library]
-  
+  before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library show_books_genre_report show_books_return_report]
+
   skip_before_action :verify_authenticity_token # fix!!!
 
   # GET /books/:book_uid
@@ -123,6 +123,18 @@ class GatewayController < ApplicationController
     rating = GatewayService.new.show_user_rating(@user_uid)
 
     render json: rating, status: :ok
+  end
+
+  def show_books_genre_report
+    report = GatewayService.new.show_books_genre_report
+
+    render json: report, status: :ok
+  end
+
+  def show_books_return_report
+    report = GatewayService.new.show_books_return_report
+
+    render json: report, status: :ok
   end
 
   private
