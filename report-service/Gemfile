@@ -44,3 +44,6 @@ gem 'bunny'
 # A high-performance RabbitMQ background processing framework for Ruby.
 # It made especially for processing messages that come from queues.
 gem 'sneakers'
+
+# Send HTTP requests using the RestClient
+gem 'rest-client'

@@ -1,15 +1,15 @@
 class TakenBookService
-  def self.push(taken_book)
+  def self.push(raw_taken_book, logger)
     @taken_book = TakenBook.new(
-      taken_book_uid: taken_book['taken_book_uid'],
-      user_uid: taken_book['user_uid'],
-      take_date: DateTime.parse(taken_book['take_date']),
-      status: taken_book['status'],
-      book_uid: taken_book['book_uid']
+      taken_book_uid: raw_taken_book['taken_book_uid'],
+      user_uid: raw_taken_book['user_uid'],
+      take_date: DateTime.parse(raw_taken_book['take_date']),
+      status: raw_taken_book['status'],
+      book_uid: raw_taken_book['book_uid']
     )
 
     begin
-      book = get_book_info(taken_book['book_uid'])
+      book = BookService.new.get_book_info(raw_taken_book['book_uid'], logger)
 
       @taken_book.book = book['name']
       @taken_book.author = book['author']['first_name']
@@ -17,27 +17,13 @@ class TakenBookService
       @taken_book.author += " #{book['author']['last_name']}"
       @taken_book.genre = book['genre']
     rescue StandardError => e
-      Rails.logger.error "Taken Books: Tailed to add new taken book: #{e.message}"
+      logger.error "Taken Books: Failed to get book '#{raw_taken_book['book_uid']}' info: #{e.message}"
     end
 
-    if @taken_book.valid?
-      @taken_book.save
-      Rails.logger.info "Taken Books: Add new taken book: #{@taken_book.attributes}"
+    if @taken_book.save
+      logger.info "Taken Books: Add new taken book: #{@taken_book.attributes}"
     else
-      Rails.logger.error "Taken Books: Tailed to add new taken book: #{@taken_book.errors.messages}"
+      logger.error "Taken Books: Failed to add new taken book: #{@taken_book.errors.messages}"
     end
-  end
-
-  private
-
-  def get_book_info(book_uid)
-    Rails.logger.info "Request to Books Service to get book '#{book_uid}'"
-    BookService.new.get_book_info(book_uid)
-  rescue RestClient::Unauthorized, RestClient::Forbidden
-    Rails.logger.info 'Request to Book Service for a token'
-    BookService.new.request_token(GATEWAY_ID, GATEWAY_SECRET)
-
-    Rails.logger.info "Request to Books Service to get book '#{book_uid}' again"
-    BookService.new.get_book_info(book_uid)
   end
 end

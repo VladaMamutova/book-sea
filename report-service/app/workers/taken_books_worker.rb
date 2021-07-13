@@ -6,9 +6,9 @@ class TakenBooksWorker
   from_queue 'taken_books', env: nil
 
   def work(message)
-    taken_book = JSON.parse(message)
-    logger.info "New message from taken_books queue: #{taken_book}"
-    TakenBookService.push(taken_book)
+    raw_taken_book = JSON.parse(message)
+    logger.info "New message from taken_books queue: #{raw_taken_book}"
+    TakenBookService.push(raw_taken_book, logger)
     ack!
   rescue StandardError => e
     logger.error "Error: #{e.message}"
