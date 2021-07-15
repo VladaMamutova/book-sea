@@ -6,6 +6,15 @@ class UsersController < ApplicationController
     render json: @users, each_serializer: UserSerializer
   end
 
+  def show
+    check_admin_rights
+
+    @user = User.find_by(user_uid: params[:id])
+    raise ActiveRecord::RecordNotFound, "User '#{params[:id]}' not found" unless @user
+
+    render json: @user, serializer: UserSerializer
+  end
+
   def create
     check_admin_rights
 

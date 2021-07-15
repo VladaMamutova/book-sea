@@ -68,6 +68,11 @@ const routes = [
     props: (route) => ({ book: route.params.book })
   },
   {
+    path: '/reports',
+    name: 'Reports',
+    component: () => import("../views/admin/reports/Reports.vue")
+  },
+  {
     path: '/*',
     name: 'NotFound',
     component: () => import("../views/NotFound.vue"),

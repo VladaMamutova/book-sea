@@ -3,3 +3,22 @@
 @tailwind components;
 
 @tailwind utilities;
+
+a[disabled], button[disabled] {
+   pointer-events: none;
+   cursor: default;
+   border: 1px solid #a0aec0;
+   color: #a0aec0;
+}
+
+.table {
+  border-spacing: 0 15px;
+}
+
+.td-round-left {
+  border-radius: .625rem 0 0 .625rem;
+}
+
+.td-round-right {
+  border-radius: 0 .625rem .625rem 0;
+}

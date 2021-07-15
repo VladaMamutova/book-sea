@@ -20,7 +20,7 @@ class AuthorizeApiRequest
     if @role && @role != @decoded_auth_token[:role]
       errors.add(:message, 'You do not have permission to perform this action')
     end
-    
+
     errors.empty? ? @decoded_auth_token[:user_uid] : nil
   end
 

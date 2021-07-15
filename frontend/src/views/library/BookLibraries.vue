@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto item-center px-16 py-6">
+  <div class="container mx-auto items-center px-16 py-6">
     <div class="flex justify-center space-x-4">
       <div class="flex justify-center">
         <div class="flex flex-initial items-center">

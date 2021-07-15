@@ -6,6 +6,7 @@ module ExceptionHandler
   included do
     rescue_from StandardError, RuntimeError, with: :internal_server_error
     rescue_from ActiveRecord::RecordInvalid, with: :bad_request
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from JWT::ExpiredSignature, with: :forbidden
     rescue_from NotAuthorized, JWT::DecodeError, JWT::VerificationError, with: :unauthorized
   end
@@ -23,6 +24,10 @@ module ExceptionHandler
 
   def forbidden(error)
     render json: { message: error.message }, status: :forbidden # 403
+  end
+
+  def not_found(error)
+    render json: { message: error.message }, status: :not_found # 404
   end
 
   def internal_server_error(error)

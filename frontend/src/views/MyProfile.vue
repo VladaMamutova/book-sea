@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto item-center px-16 py-6">
+  <div class="container mx-auto items-center px-16 py-6">
     <div class="flex justify-center space-x-4">
       <div class="flex justify-center text-center">
     
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-     </div>
+    </div>
     
     <h3 class="text-xl uppercase mt-10 font-bold text-black text-center">
       Мои книги
@@ -56,8 +56,6 @@ export default {
     }
   },
   created () {
-    console.log(!localStorage.signedIn)
-    console.log(localStorage.role != "user")
     if (!localStorage.signedIn && localStorage.role != "user") {
       this.$router.replace('/')
     } else {

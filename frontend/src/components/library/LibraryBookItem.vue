@@ -37,8 +37,11 @@
         </div>
 
         <div v-else class="flex items-center">
-          <div v-if="library_book.available_count > 0 && !is_taken" class="rounded-full flex pr-4">
-            <button @click.prevent="take_book" class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700">
+          <div v-if="library_book.available_count > 0 && !is_taken" :title="can_take ? '' : 'Войдите, чтобы взять книгу в библиотеках'" class="rounded-full flex pr-4">
+            <button class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
+              :disabled="!can_take"
+              :event="can_take ? 'click' : ''"
+              @click.prevent="take_book">
               Взять в библиотеке
             </button>
           </div>
@@ -80,14 +83,16 @@ export default {
     }
   },
   created() {
-    this.isAdmin = localStorage.role === "admin"     
+    this.isAdmin = localStorage.role === "admin"
+    this.can_take = localStorage.signedIn     
   },
   data () {
     return {
       isAdmin: false,
       is_taken: false,
       take_date: '',
-      error: ''
+      error: '',
+      can_take: false
     }
   },
   methods: {

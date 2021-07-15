@@ -22,5 +22,5 @@ Rails.application.routes.draw do
   get '/rating/user', to: 'gateway#show_user_rating' 
 
   get '/reports/books-genre', to: 'gateway#show_books_genre_report'
-  get '/reports/books_return', to: 'gateway#show_books_return_report'
+  get '/reports/books-return', to: 'gateway#show_books_return_report'
 end

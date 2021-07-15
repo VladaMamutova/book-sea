@@ -282,9 +282,20 @@ class GatewayService
     ReportService.new.books_genre_report
   end
 
-  def show_books_return_report
+  def show_books_return_report(token)
     Rails.logger.info 'Request to Report Service to get books return report'
-    ReportService.new.books_return_report
+    user_books = ReportService.new.books_return_report
+
+    user_books.each do |user_book|
+      begin
+        user = SessionService.new.get_user_info(token, user_book['user_uid'])
+        user_book['login'] = user['login']
+      rescue StandardError => e
+        Rails.logger.info "Error: #{e.message}"
+      end
+    end
+
+    user_books
   end
 
   private

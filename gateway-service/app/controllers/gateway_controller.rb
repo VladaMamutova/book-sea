@@ -132,7 +132,8 @@ class GatewayController < ApplicationController
   end
 
   def show_books_return_report
-    report = GatewayService.new.show_books_return_report
+    token = request.headers['Authorization'].gsub(/^Bearer /, '')
+    report = GatewayService.new.show_books_return_report(token)
 
     render json: report, status: :ok
   end
@@ -160,7 +161,7 @@ class GatewayController < ApplicationController
   end
 
   def check_admin_rights
-    Rails.logger.info 'Check admin rights before API request'    
+    Rails.logger.info 'Check admin rights before API request'
     command = AuthorizeApiRequest.call(request.headers, 'admin')
     raise Error::NotAuthorized, command.errors[:message].first if !command.success?
 
