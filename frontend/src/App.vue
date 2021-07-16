@@ -15,9 +15,7 @@
 
           <div v-if="!signedIn && !isSignedIn()" class="md:flex items-center justify-end md:flex-1 lg:w-0">
             <router-link to="/sign_in" class="whitespace-nowrap text-lg font-medium text-gray-500 hover:text-gray-900">Вход</router-link>
-            <a href="#" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-              Регистрация
-            </a>
+            <router-link to="/sign_up" class="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700">Регистрация</router-link>
           </div>
           <div v-else class="md:flex items-center justify-end md:flex-1 lg:w-0">
             <router-link to="/profile" v-if="!isAdmin" class="flex whitespace-nowrap text-lg font-medium text-gray-500 hover:text-gray-900 cursor-pointer">
