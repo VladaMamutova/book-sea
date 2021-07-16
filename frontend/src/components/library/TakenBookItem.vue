@@ -58,7 +58,7 @@
               <span v-else class="text-green-500">хорошее</span>
             </div>
           </div>
-          </div>
+        </div>
       </div>
     </div>
 
@@ -84,7 +84,6 @@
             </button>
           </div>
         </div>
-
       </form>
     </div>
 

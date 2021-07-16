@@ -27,7 +27,7 @@
           </div>
         </div>
         
-        <div class="rounded-full items-center flex pr-4" :title="can_find ? '' : 'Войдите, чтобы найти книгу в библиотеках'">
+        <div class="rounded-full items-center flex pr-4" :title="can_find ? '' : 'Войдите, чтобы найти книгу в библиотеке'">
           <router-link class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-xl font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
             :to="{ name: 'BookLibraries', params: { book_uid: book_uid, book: book }}"
             :disabled="!can_find"

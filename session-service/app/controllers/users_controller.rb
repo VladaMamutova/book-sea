@@ -26,6 +26,16 @@ class UsersController < ApplicationController
     render json: @user, serializer: UserSerializer, status: :created, location: request.original_url + @user.user_uid
   end
 
+  def destroy
+    check_admin_rights
+
+    @user = User.find_by(user_uid: params[:id])
+    raise ActiveRecord::RecordNotFound, "User '#{params[:id]}' not found" unless @user
+
+    @user.destroy
+    head :no_content
+  end
+
   private
 
   def user_params

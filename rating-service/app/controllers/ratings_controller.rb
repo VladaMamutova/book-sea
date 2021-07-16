@@ -40,6 +40,12 @@ class RatingsController < ApplicationController
     render json: response
   end
 
+  # DELETE /rating/user/:user_uid
+  def destroy
+    @rating.destroy
+    head :no_content
+  end
+
   private
 
   def set_rating

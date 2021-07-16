@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto item-center px-16 py-6">
-    <h1 class="text-3xl font-bold text-black text-center">
+    <h1 v-if="library" class="text-3xl font-bold text-black text-center">
       {{ library.name }}
     </h1>
 
-    <div class="flex-wrap text-lg mt-2 text-gray-700 font-normal text-center">
+    <div v-if="library" class="flex-wrap text-lg mt-2 text-gray-700 font-normal text-center">
       г. {{ library.city }}, {{ library.address }}
     </div>
 
@@ -22,24 +22,26 @@ import LibraryBookItem from '@/components/library/LibraryBookItem.vue'
 
 export default {
   name: 'LibraryBooks',
-  props: {
-    library: {
-      type: Object,
-      required: true
-    }
-  },
+  props: ['library_prop'],
   components: {
     List,
     LibraryBookItem
   },
   data () {
     return {
+      library: {},
       library_books: [],
       error: '',
     }
   },
   created () {
-    this.$http.plain.get('/library/' + this.library.library_uid + '/books')
+    this.library = this.library_prop
+    if (this.library === undefined) {
+      this.$http.plain.get('/library/' + this.$route.params.library_uid)
+      .then(response => { this.library = response.data })
+      .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
+    }
+    this.$http.plain.get('/library/' + this.$route.params.library_uid + '/books')
       .then(response => { this.library_books = response.data })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
   },

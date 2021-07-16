@@ -1,5 +1,5 @@
 class UserMonitoringController < ApplicationController
-  before_action :set_user_monitoring
+  before_action :set_user_monitoring, except: :start_user_monitoring
 
   # GET /control/user/:user_uid
   def show
@@ -19,7 +19,7 @@ class UserMonitoringController < ApplicationController
     if taken_books.count >= @user_monitoring.limit
       raise Error::LimitExceeded, "The number of books taken by user: '#{params[:user_uid]}' has reached its limit (#{@user_monitoring.limit})"
     end
- 
+
     @user_monitoring.update(taken_books: (taken_books << taken_book_uid))
 
     head :ok
@@ -41,10 +41,17 @@ class UserMonitoringController < ApplicationController
     head :ok
   end
 
+  # POST /control/user/:user_uid
+  def start_user_monitoring
+    @user_monitoring = UserMonitoring.create(user_uid: params[:user_uid], limit: params[:limit])
+
+    render json: @user_monitoring, serializer: UserMonitoringSerializer, status: :created
+  end
+
   private
 
   def set_user_monitoring
     @user_monitoring = UserMonitoring.find_by(user_uid: params[:user_uid]) # nil if not found
-    raise ActiveRecord::RecordNotFound, "User Monitoring '#{params[:user_uid]}' not found" unless @user_monitoring
+    raise ActiveRecord::RecordNotFound, "User '#{params[:user_uid]}' monitoring not found" unless @user_monitoring
   end
 end

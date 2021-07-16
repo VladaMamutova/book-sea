@@ -29,4 +29,11 @@ class ControlService
     response = RestClient.get "#{CONTROL_SERVICE_URL}/control/user/#{user_uid}/taken_books"
     JSON.parse(response.body)
   end
+
+  def start_monitoring(user_uid, limit)
+    url = "#{CONTROL_SERVICE_URL}/control/user/#{user_uid}"
+    headers = { content_type: :json }
+    params = { limit: limit }.to_json
+    RestClient.post url, params, headers
+  end
 end

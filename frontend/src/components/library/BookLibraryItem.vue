@@ -5,7 +5,7 @@
     <div class="flex-auto py-4 space-y-2">
         <h2>
           <router-link class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
-            :to="{ name: 'LibraryBooks', params: { library_uid: library.library_uid, library: library }}">
+            :to="{ name: 'LibraryBooks', params: { library_uid: library.library_uid, library_prop: library }}">
             {{ library.name }}
           </router-link>
         </h2>
@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div v-if="available_count > 0 && !is_taken" :title="can_take ? '' : 'Войдите, чтобы взять книгу в библиотеках'" class="rounded-full items-center flex pr-4">
+      <div v-if="available_count > 0 && !is_taken" :title="can_take ? '' : 'Войдите, чтобы взять книгу в библиотеке'" class="rounded-full items-center flex pr-4">
         <button class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
           :disabled="!can_take"
           :event="can_take ? 'click' : ''"

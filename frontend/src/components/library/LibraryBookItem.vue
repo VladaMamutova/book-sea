@@ -11,11 +11,16 @@
     
         <div class="flex-auto px-6 py-4 space-y-2">
           <h2 v-if="library_book.name">
-            <router-link class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
+            <router-link v-if="isAdmin" class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
+              :to="{ name: 'EditBook', params: { book_uid: library_book.book_uid }}">
+              {{ library_book.name }}
+            </router-link>
+
+             <router-link v-else class="text-xl font-bold text-black hover:underline hover:text-indigo-700"
               :to="{ name: 'BookInfo', params: { book_uid: library_book.book_uid }}">
               {{ library_book.name }}
             </router-link>
-          </h2>     
+          </h2>
 
           <div v-if="library_book.author" class="flex-wrap text-base text-gray-500 font-normal">
             Автор: 
@@ -37,7 +42,7 @@
         </div>
 
         <div v-else class="flex items-center">
-          <div v-if="library_book.available_count > 0 && !is_taken" :title="can_take ? '' : 'Войдите, чтобы взять книгу в библиотеках'" class="rounded-full flex pr-4">
+          <div v-if="library_book.available_count > 0 && !is_taken" :title="can_take ? '' : 'Войдите, чтобы взять книгу в библиотеке'" class="rounded-full flex pr-4">
             <button class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-base font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
               :disabled="!can_take"
               :event="can_take ? 'click' : ''"

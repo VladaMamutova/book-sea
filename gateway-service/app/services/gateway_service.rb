@@ -206,7 +206,7 @@ class GatewayService
       raise e
     end
 
-    begin      
+    begin
       Rails.logger.info "Request to Rating Service to update score for user '#{user_uid}'"
       rating = RatingService.new.update_score(user_uid, returned_book['in_time'], returned_book['status'])
       return_info['rating_status'] = rating['status']
@@ -216,9 +216,9 @@ class GatewayService
 
       if rating['operation'] != 'none'
         Rails.logger.info "Request to Control Service to update the limit of taken books for user '#{user_uid}'"
-        ControlService.new.update_limit(user_uid, rating['limit'])     
+        ControlService.new.update_limit(user_uid, rating['limit'])
       end
-  
+
     rescue StandardError => e
       Rails.logger.info "Error: #{e.message}"
     end
@@ -296,6 +296,60 @@ class GatewayService
     end
 
     user_books
+  end
+
+  def sign_up(token, login, password)
+    Rails.logger.info "Request to Session Service to register user with login '#{login}'"
+    response = SessionService.new.register(token, login, password)
+
+    user_uid = response['user_uid']
+    begin
+      Rails.logger.info "Request to Rating Service to create rating for user '#{user_uid}'"
+      rating = RatingService.new.create_rating(user_uid)
+
+      begin
+        Rails.logger.info "Request to Control Service to start monitoring for user '#{user_uid}' (book limit: #{rating['limit']})"
+        ControlService.new.start_monitoring(user_uid, rating['limit'])
+      rescue StandardError => e
+        Rails.logger.info "Error: #{e.message}"
+
+        Rails.logger.info "Request to Rating Service to remove rating for user '#{user_uid}'"
+        RatingService.new.delete_rating(user_uid)
+
+        raise e
+      end
+    rescue StandardError => e
+      Rails.logger.info "Error: #{e.message}"
+
+      Rails.logger.info "Request to Session Service to delete user '#{user_uid}' account (login: '#{login}')"
+      SessionService.new.delete_account(token, user_uid)
+
+      raise Error::RegistrationFailed, e.message
+    end
+  end
+
+  def show_user_ratings(token)
+    Rails.logger.info 'Request to Session Service to get users'
+    users = SessionService.new.get_users_info(token)
+
+    user_ratings = []
+    users.each do |user|
+      begin
+        rating = show_user_rating(user['user_uid'])
+        user_rating = {
+          user_uid: user['user_uid'],
+          login: user['login'],
+          status: rating['status'],
+          score: rating['score'],
+          limit: rating['limit']
+        }
+        user_ratings << user_rating
+      rescue StandardError => e
+        Rails.logger.info "Error: #{e.message}"
+      end
+    end
+
+    user_ratings
   end
 
   private

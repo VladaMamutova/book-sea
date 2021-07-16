@@ -15,11 +15,6 @@ const routes = [
     component: () => import("../views/SignIn.vue")    
   },
   {
-    path: '/sign_up',
-    name: 'SignUp',
-    component: () => import("../views/SignUp.vue")    
-  },
-  {
     path: '/profile',
     name: 'MyProfile',
     component: () => import("../views/MyProfile.vue"),
@@ -64,13 +59,18 @@ const routes = [
     path: '/library/:library_uid/books',
     name: 'LibraryBooks',
     component: () => import("../views/library/LibraryBooks.vue"),
-    props: (route) => ({ library: route.params.library })
+    props: (route) => ({ library_prop: route.params.library_prop })
   },
   {
     path: '/library/book/:book_uid',
     name: 'BookLibraries',
     component: () => import("../views/library/BookLibraries.vue"),
     props: (route) => ({ book: route.params.book })
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: () => import("../views/admin/users/Users.vue")    
   },
   {
     path: '/reports',

@@ -4,5 +4,6 @@ Rails.application.routes.draw do
 
   get '/rating/user/:user_uid', to: 'ratings#show'
   post '/rating/user/:user_uid', to: 'ratings#create'
+  delete '/rating/user/:user_uid', to: 'ratings#destroy'
   post '/rating/user/:user_uid/update', to: 'ratings#update_score'
 end

@@ -13,4 +13,14 @@ class RatingService
     response = RestClient.post url, params, { content_type: :json, accept: :json }
     JSON.parse(response.body)
   end
+
+  def create_rating(user_uid)
+    url = "#{RATING_SERVICE_URL}/rating/user/#{user_uid}"
+    response = RestClient.post url, {}, { accept: :json }
+    JSON.parse(response.body)
+  end
+
+  def delete_rating(user_uid)
+    RestClient.delete "#{RATING_SERVICE_URL}/rating/user/#{user_uid}"
+  end
 end
