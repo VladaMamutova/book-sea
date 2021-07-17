@@ -19,6 +19,7 @@ env:
   GATEWAY_IMAGE: gateway  # = gateway deployment name
   SESSION_IMAGE: session  # = session deployment name
   REPORT_IMAGE: report  # = report deployment name
+  FRONTEND_IMAGE: frontend  # = frontend deployment name
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true # allow to use set-env command
 
 jobs:
@@ -58,6 +59,7 @@ jobs:
         echo "::set-env name=GATEWAY_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$GATEWAY_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
         echo "::set-env name=SESSION_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$SESSION_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
         echo "::set-env name=REPORT_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$REPORT_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
+        echo "::set-env name=FRONTEND_IMAGE_WITH_TAG::us.gcr.io/$PROJECT_ID/$FRONTEND_IMAGE:${GITHUB_REF##*/}-$GITHUB_SHA"
 
     # Build the Docker images
     - name: Build Books Image
@@ -81,6 +83,9 @@ jobs:
     - name: Build Report Image
       run: docker build --tag "$REPORT_IMAGE_WITH_TAG" --file report-service/Dockerfile.prod report-service
 
+    - name: Build Frontend Image
+      run: docker build --tag "$FRONTEND_IMAGE_WITH_TAG" --file frontend/Dockerfile.prod frontend
+
     # Push the Docker images to Google Container Registry
     - name: Publish Books Image
       run: docker push "$BOOKS_IMAGE_WITH_TAG"
@@ -102,6 +107,9 @@ jobs:
 
     - name: Publish Report Image
       run: docker push "$REPORT_IMAGE_WITH_TAG"
+
+    - name: Publish Frontend Image
+      run: docker push "$FRONTEND_IMAGE_WITH_TAG"
 
     # Set up Kustomize
     # Kustomize is an optional tool used for managing YAML specs.
@@ -154,6 +162,12 @@ jobs:
         ./kustomize edit set image PROJECT/REPORT_IMAGE=$REPORT_IMAGE_WITH_TAG
         kubectl apply -k .
         kubectl rollout status deployment $REPORT_IMAGE
+
+    - name: Deploy Frontend Service
+      run: |-
+        ./kustomize edit set image PROJECT/FRONTEND_IMAGE=$FRONTEND_IMAGE_WITH_TAG
+        kubectl apply -k .
+        kubectl rollout status deployment $FRONTEND_IMAGE
 
     - name: Run API Tests
       id: run-newman
