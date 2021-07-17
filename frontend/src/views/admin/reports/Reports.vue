@@ -8,8 +8,8 @@
         </Nav>
       </div>
       <div class="flex justify-center mt-6">
-        <GenreTable v-if="genrePopularityReport"></GenreTable>
-        <UserBooksTable v-else></UserBooksTable>
+        <GenreTable v-show="genrePopularityReport"></GenreTable>
+        <UserBooksTable v-show="!genrePopularityReport"></UserBooksTable>
       </div>
     </div>
   </div>

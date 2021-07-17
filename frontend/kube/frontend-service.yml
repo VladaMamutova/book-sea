@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 34.79.177.198
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    name: frontend

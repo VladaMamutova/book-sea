@@ -1,7 +1,6 @@
 import axios from 'axios'
-
-const SESSION_URL = 'http://localhost:8680'
-const GATEWAY_URL = 'http://localhost:8580'
+const SESSION_URL = process.env.VUE_APP_SESSION_URL
+const GATEWAY_URL = process.env.VUE_APP_GATEWAY_URL
 
 const sessionAxiosInstance = axios.create({
   baseURL: SESSION_URL,
