@@ -47,13 +47,11 @@ spec:
               secretKeyRef:
                 name: library-secrets
                 key: rails-master-key
-          env:
           - name: RABBITMQ_USERNAME
             valueFrom:
               secretKeyRef:
                 name: rabbitmq-secrets
                 key: username
-          env:
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
