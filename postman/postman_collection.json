@@ -81,6 +81,7 @@
 									"    const response = pm.response.json();",
 									"    pm.expect(response.book_uid).to.not.empty",
 									"    pm.environment.set(\"book_uid\", response.book_uid)",
+									"    pm.environment.set(\"author_uid\", response.author.author_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -690,6 +691,7 @@
 									"    pm.expect(jsonData[0].name).to.not.empty",
 									"    pm.expect(jsonData[0].address).to.not.empty",
 									"    pm.expect(jsonData[0].city).to.not.empty",
+									"    pm.environment.set(\"library_uid\", jsonData[0].library_uid)",
 									"});"
 								],
 								"type": "text/javascript"
@@ -858,13 +860,9 @@
 									"",
 									"    const jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    ",
-									"    const book_uid = pm.variables.get(\"book_uid\")",
-									"    const book_number = jsonData.length",
-									"    pm.expect(book_number).to.greaterThan(0)",
-									"    pm.expect(jsonData[book_number - 1].book_uid).to.eq(book_uid)",
-									"    pm.expect(jsonData[book_number - 1].available_count).to.eq(5)",
-									"})"
+									"    pm.expect(jsonData.length).to.greaterThan(0)",
+									"})",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -970,14 +968,18 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
-									"    const response = pm.response.json();    ",
+									"    const response = pm.response.json();",
+									"    const user_uid = pm.variables.get(\"user_uid\")",
 									"    const library_uid = pm.variables.get(\"library_uid\")",
 									"    const book_uid = pm.variables.get(\"book_uid\")",
 									"    pm.expect(response.taken_book_uid).to.not.empty",
+									"    pm.expect(response.user_uid).to.eq(user_uid)",
 									"    pm.expect(response.library_uid).to.eq(library_uid)",
 									"    pm.expect(response.book_uid).to.eq(book_uid)",
 									"    pm.expect(response.status).to.eq(\"new\")",
-									"    pm.expect(response.date).to.not.empty",
+									"    pm.expect(response.take_date).to.not.empty",
+									"    ",
+									"    pm.environment.set(\"taken_book_uid\", response.taken_book_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -998,7 +1000,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"user_uid\": \"{{user_uid}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1037,7 +1039,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Get author with books\", function() {",
+									"pm.test(\"Get user taken books\", function() {",
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
@@ -1095,6 +1097,13 @@
 								"exec": [
 									"pm.test(\"Return book to library\", function() {",
 									"    pm.response.to.have.status(200)",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.taken_book_uid).to.not.empty",
+									"    pm.expect(response.status).to.eq(\"used\")",
+									"    pm.expect(response.take_date).to.not.empty",
+									"    pm.expect(response.return_date).to.not.empty",
+									"    pm.expect(response.in_time).to.eq(true)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1115,7 +1124,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"status\": \"used\"\n}",
+							"raw": "{\n    \"user_uid\": \"{{user_uid}}\",\n    \"status\": \"used\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1211,6 +1220,74 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Authenticate\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.token).to.not.empty",
+									"    pm.environment.set(\"user_token\", response.token)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "user",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/auth",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[authentication] Authenticate admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authenticate Admin\", function() {",
 									"    pm.response.to.have.status(200)",
 									"        pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
@@ -1389,6 +1466,73 @@
 					"response": []
 				},
 				{
+					"name": "[users] Get user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get user\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"    ",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.login).to.not.empty",
+									"    pm.expect(jsonData.role).to.not.empty",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{session_url}}/users/{{user_uid}}",
+							"host": [
+								"{{session_url}}"
+							],
+							"path": [
+								"users",
+								"{{user_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[users] Create user",
 					"event": [
 						{
@@ -1477,6 +1621,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1525,6 +1679,7 @@
 									"    pm.expect(response.name).to.eq(\"Педагогическая поема\")",
 									"    pm.expect(response.genre).to.eq(\"роман\")",
 									"    pm.expect(response.author.last_name).to.eq(\"Макаренко\")",
+									"    pm.environment.set(\"author_uid\", response.author.author_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1766,6 +1921,8 @@
 									"    pm.expect(jsonData[0].name).to.not.empty",
 									"    pm.expect(jsonData[0].address).to.not.empty",
 									"    pm.expect(jsonData[0].city).to.not.empty",
+									"",
+									"    pm.environment.set(\"library_uid\", jsonData[0].library_uid)",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1819,6 +1976,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1859,11 +2026,10 @@
 									"    const jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.be.an(\"array\");",
 									"    ",
-									"    const book_uid = pm.variables.get(\"book_uid\")",
 									"    const book_number = jsonData.length",
 									"    pm.expect(book_number).to.greaterThan(0)",
-									"    pm.expect(jsonData[book_number - 1].book_uid).to.eq(book_uid)",
-									"    pm.expect(jsonData[book_number - 1].available_count).to.eq(5)",
+									"    pm.expect(jsonData[book_number - 1].book_uid).to.not.empty",
+									"    pm.expect(jsonData[book_number - 1].available_count).greaterThan(-1)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1925,6 +2091,16 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -1970,14 +2146,18 @@
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
-									"    const response = pm.response.json();    ",
+									"    const response = pm.response.json();",
+									"    const user_uid = pm.variables.get(\"user_uid\")",
 									"    const library_uid = pm.variables.get(\"library_uid\")",
 									"    const book_uid = pm.variables.get(\"book_uid\")",
 									"    pm.expect(response.taken_book_uid).to.not.empty",
+									"    pm.expect(response.user_uid).to.eq(user_uid)",
 									"    pm.expect(response.library_uid).to.eq(library_uid)",
 									"    pm.expect(response.book_uid).to.eq(book_uid)",
 									"    pm.expect(response.status).to.eq(\"new\")",
-									"    pm.expect(response.date).to.not.empty",
+									"    pm.expect(response.take_date).to.not.empty",
+									"",
+									"    pm.environment.set(\"taken_book_uid\", response.taken_book_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1985,6 +2165,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -2013,8 +2203,27 @@
 					"response": []
 				},
 				{
-					"name": "[library] Return book to library",
+					"name": "[library] Show user taken books",
 					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Shiw user taken books\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();    ",
+									"    pm.expect(response).to.be.an(\"array\");",
+									"    pm.expect(response.length).to.greaterThan(0)",
+									"    pm.expect(response[0].taken_book_uid).to.not.empty",
+									"    pm.expect(response[0].book_uid).to.not.empty",
+									"    pm.expect(response[0].library_uid).to.not.empty",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
 						{
 							"listen": "prerequest",
 							"script": {
@@ -2023,25 +2232,100 @@
 								],
 								"type": "text/javascript"
 							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
 						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/library/user/books",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"library",
+								"user",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[library] Return book to library",
+					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Return item\", function() {",
+									"pm.test(\"Return book to library\", function() {",
 									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.taken_book_uid).to.not.empty",
+									"    pm.expect(response.status).to.eq(\"used\"),",
+									"    pm.expect(response.return_date).to.not.empty",
+									"    pm.expect(response.in_time).to.eq(true)",
+									"",
+									"    pm.expect(response.rating_status).to.not.empty",
+									"    pm.expect(response.rating_score).to.greaterThan(-1)",
+									"    pm.expect(response.rating_operation).to.not.empty",
+									"",
+									"    pm.expect(response.book_limit).to.greaterThan(0)",
 									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"status\": \"used\"\n}",
+							"raw": "{\n    \"user_uid\": \"{{user_uid}}\",\n    \"status\": \"used\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2065,6 +2349,54 @@
 					"response": []
 				},
 				{
+					"name": "[rating] Show user rating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show user rating\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.status).to.not.empty",
+									"    pm.expect(response.limit).to.greaterThan(0)",
+									"    pm.expect(response.score).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/rating/user",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"rating",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[library]: Remove book from library",
 					"event": [
 						{
@@ -2080,6 +2412,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -2123,6 +2465,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -2133,6 +2485,521 @@
 							"path": [
 								"books",
 								"{{book_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Show books genres report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show book genres report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].genre).to.not.empty",
+									"    pm.expect(jsonData[0].book_count).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/reports/books-genre",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"reports",
+								"books-genre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Show user returned books report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show user returned books report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].user_uid).to.not.empty",
+									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/reports/books-return",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"reports",
+								"books-return"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Sign up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Sign up\", function() {",
+									"    pm.response.to.have.status(400)",
+									"        ",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.message).to.eq(\"Validation failed\")",
+									"    pm.expect(response.details[0]).to.eq(\"Login has already been taken\")",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"user\",\n    \"password\": \"user\",\n    \"role\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/sign-up",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Show user ratings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show user ratings\", function() {",
+									"    pm.response.to.have.status(200)",
+									"        ",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an(\"array\");",
+									"    pm.expect(response[0].user_uid).to.not.empty",
+									"    pm.expect(response[0].login).to.not.empty",
+									"    pm.expect(response[0].status).to.not.empty",
+									"    pm.expect(response[0].score).to.greaterThan(0)",
+									"    pm.expect(response[0].limit).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/users/rating",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"users",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Control Service",
+			"item": [
+				{
+					"name": "[control] Show user info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show user info\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.user_uid).to.not.empty",
+									"    pm.expect(response.taken_books).to.be.an(\"array\");",
+									"    pm.expect(response.limit).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Show taken books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show taken books\", function() {",
+									"    const response = pm.response;",
+									"    response.to.have.status(200)",
+									"    pm.expect(response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"    ",
+									"    const jsonData = response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData.length).to.greaterThan(-1)",
+									"    const taken_book_uid = pm.variables.get(\"taken_book_uid\")",
+									"    pm.expect(jsonData[jsonData.length -1]).to.eq(taken_book_uid)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Add taken book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Add taken book\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"taken_book_uid\": \"{{taken_book_uid}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Remove taken book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Remove taken book\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books/{{taken_book_uid}}",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books",
+								"{{taken_book_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rating",
+			"item": [
+				{
+					"name": "[rating] Get user rating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get user rating\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.status).to.not.empty",
+									"    pm.expect(response.limit).to.greaterThan(0)",
+									"    pm.expect(response.score).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_uid}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rating_url}}/rating/user/{{user_uid}}",
+							"host": [
+								"{{rating_url}}"
+							],
+							"path": [
+								"rating",
+								"user",
+								"{{user_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report Service",
+			"item": [
+				{
+					"name": "[reports] Get books genres report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get books genres report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].genre).to.not.empty",
+									"    pm.expect(jsonData[0].book_count).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{report_url}}/reports/books-genre",
+							"host": [
+								"{{report_url}}"
+							],
+							"path": [
+								"reports",
+								"books-genre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Get returned books report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get returned books report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].user_uid).to.not.empty",
+									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{report_url}}/reports/books-return",
+							"host": [
+								"{{report_url}}"
+							],
+							"path": [
+								"reports",
+								"books-return"
 							]
 						}
 					},
