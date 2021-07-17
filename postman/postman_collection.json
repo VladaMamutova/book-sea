@@ -1598,6 +1598,317 @@
 			]
 		},
 		{
+			"name": "Control Service",
+			"item": [
+				{
+					"name": "[control] Show user info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show user info\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.user_uid).to.not.empty",
+									"    pm.expect(response.taken_books).to.be.an(\"array\");",
+									"    pm.expect(response.limit).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Add taken book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Add taken book\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"taken_book_uid\": \"{{taken_book_uid}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Show taken books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Show taken books\", function() {",
+									"    const response = pm.response;",
+									"    response.to.have.status(200)",
+									"    pm.expect(response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"    ",
+									"    const jsonData = response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData.length).to.greaterThan(-1)",
+									"    const taken_book_uid = pm.variables.get(\"taken_book_uid\")",
+									"    pm.expect(jsonData[jsonData.length -1]).to.eq(taken_book_uid)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[control] Remove taken book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Remove taken book\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books/{{taken_book_uid}}",
+							"host": [
+								"{{control_url}}"
+							],
+							"path": [
+								"control",
+								"user",
+								"{{user_uid}}",
+								"taken_books",
+								"{{taken_book_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rating",
+			"item": [
+				{
+					"name": "[rating] Get user rating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get user rating\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.status).to.not.empty",
+									"    pm.expect(response.limit).to.greaterThan(0)",
+									"    pm.expect(response.score).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_uid}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rating_url}}/rating/user/{{user_uid}}",
+							"host": [
+								"{{rating_url}}"
+							],
+							"path": [
+								"rating",
+								"user",
+								"{{user_uid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report Service",
+			"item": [
+				{
+					"name": "[reports] Get books genres report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get books genres report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].genre).to.not.empty",
+									"    pm.expect(jsonData[0].book_count).to.greaterThan(0)",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{report_url}}/reports/books-genre",
+							"host": [
+								"{{report_url}}"
+							],
+							"path": [
+								"reports",
+								"books-genre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[reports] Get returned books report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get returned books report\", function() {",
+									"    pm.response.to.have.status(200)",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
+									"",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0].user_uid).to.not.empty",
+									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
+									"})",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{report_url}}/reports/books-return",
+							"host": [
+								"{{report_url}}"
+							],
+							"path": [
+								"reports",
+								"books-return"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Gateway Service",
 			"item": [
 				{
@@ -2552,11 +2863,11 @@
 									"    const jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.be.an(\"array\");",
 									"    pm.expect(jsonData[0].user_uid).to.not.empty",
-									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
+									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(0)",
 									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
 									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
 									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
+									"    pm.expect(jsonData[0].count_all).to.greaterThan(0)    ",
 									"})",
 									""
 								],
@@ -2689,317 +3000,6 @@
 							"path": [
 								"users",
 								"rating"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Control Service",
-			"item": [
-				{
-					"name": "[control] Show user info",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Show user info\", function() {",
-									"    pm.response.to.have.status(200)",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
-									"",
-									"    const response = pm.response.json();",
-									"    pm.expect(response.user_uid).to.not.empty",
-									"    pm.expect(response.taken_books).to.be.an(\"array\");",
-									"    pm.expect(response.limit).to.greaterThan(0)",
-									"})",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{control_url}}/control/user/{{user_uid}}",
-							"host": [
-								"{{control_url}}"
-							],
-							"path": [
-								"control",
-								"user",
-								"{{user_uid}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[control] Show taken books",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Show taken books\", function() {",
-									"    const response = pm.response;",
-									"    response.to.have.status(200)",
-									"    pm.expect(response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
-									"    ",
-									"    const jsonData = response.json();",
-									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData.length).to.greaterThan(-1)",
-									"    const taken_book_uid = pm.variables.get(\"taken_book_uid\")",
-									"    pm.expect(jsonData[jsonData.length -1]).to.eq(taken_book_uid)",
-									"})"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
-							"host": [
-								"{{control_url}}"
-							],
-							"path": [
-								"control",
-								"user",
-								"{{user_uid}}",
-								"taken_books"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[control] Add taken book",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Add taken book\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"taken_book_uid\": \"{{taken_book_uid}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books",
-							"host": [
-								"{{control_url}}"
-							],
-							"path": [
-								"control",
-								"user",
-								"{{user_uid}}",
-								"taken_books"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[control] Remove taken book",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Remove taken book\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{control_url}}/control/user/{{user_uid}}/taken_books/{{taken_book_uid}}",
-							"host": [
-								"{{control_url}}"
-							],
-							"path": [
-								"control",
-								"user",
-								"{{user_uid}}",
-								"taken_books",
-								"{{taken_book_uid}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Rating",
-			"item": [
-				{
-					"name": "[rating] Get user rating",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Get user rating\", function() {",
-									"    pm.response.to.have.status(200)",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
-									"",
-									"    const response = pm.response.json();",
-									"    pm.expect(response.status).to.not.empty",
-									"    pm.expect(response.limit).to.greaterThan(0)",
-									"    pm.expect(response.score).to.greaterThan(0)",
-									"})",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{user_uid}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{rating_url}}/rating/user/{{user_uid}}",
-							"host": [
-								"{{rating_url}}"
-							],
-							"path": [
-								"rating",
-								"user",
-								"{{user_uid}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Report Service",
-			"item": [
-				{
-					"name": "[reports] Get books genres report",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Get books genres report\", function() {",
-									"    pm.response.to.have.status(200)",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
-									"",
-									"    const jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData[0].genre).to.not.empty",
-									"    pm.expect(jsonData[0].book_count).to.greaterThan(0)",
-									"})",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{report_url}}/reports/books-genre",
-							"host": [
-								"{{report_url}}"
-							],
-							"path": [
-								"reports",
-								"books-genre"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[reports] Get returned books report",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Get returned books report\", function() {",
-									"    pm.response.to.have.status(200)",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
-									"",
-									"    const jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData[0].user_uid).to.not.empty",
-									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
-									"})",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{report_url}}/reports/books-return",
-							"host": [
-								"{{report_url}}"
-							],
-							"path": [
-								"reports",
-								"books-return"
 							]
 						}
 					},
