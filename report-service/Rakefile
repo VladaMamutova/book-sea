@@ -7,7 +7,7 @@
 # Запуск задач в фоновом режиме и запись лога в файл "public/rake.out":
 # nohup bundle exec rake sneakers:run --trace > public/rake.out 2>&1 &
 
-# Вывод лога.
+# Вывод лога:
 # tail -f public/rake.out
 
 # Остановка задачи, запущенной в фоне:

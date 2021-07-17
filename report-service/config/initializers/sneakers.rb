@@ -7,8 +7,8 @@ module Connection
       Bunny.new(
         host: 'rabbitmq',
         addresses: 'rabbitmq',
-        username: 'guest',
-        password: 'guest',
+        username: ENV['RABBITMQ_USERNAME'],
+        password: ENV['RABBITMQ_PASSWORD'],
         port: 5672,
         vhost: '/',
         automatically_recover: true,

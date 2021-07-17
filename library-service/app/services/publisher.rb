@@ -14,7 +14,18 @@ class Publisher
 
   def self.connection
     # Открываем соединение с контейнером, в котором запущен rabbitmq
-    @connection ||= Bunny.new('amqp://guest:guest@rabbitmq:5672')
+    @connection ||= Bunny.new(
+      host: 'rabbitmq',
+      addresses: 'rabbitmq',
+      username: ENV['RABBITMQ_USERNAME'],
+      password: ENV['RABBITMQ_PASSWORD'],
+      port: 5672,
+      vhost: '/',
+      automatically_recover: true,
+      connection_timeout: 2,
+      continuation_timeout: 4000,
+      logger: Rails.logger
+    )
     @connection.start
   end
 end
