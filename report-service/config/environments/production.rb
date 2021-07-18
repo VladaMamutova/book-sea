@@ -107,4 +107,6 @@ Rails.application.configure do
 
   config.hosts << /\A\d+\.\d+\.\d+\.\d+\z/
   config.hosts << 'report.book-sea.ru'
+
+  config.books_service_url = 'http://34.77.157.32'
 end

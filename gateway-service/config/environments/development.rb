@@ -69,4 +69,8 @@ Rails.application.configure do
   # Load with Rails.configuration.books_service_url
   config.books_service_url = 'http://books:8180'
   config.library_service_url = 'http://library:8280'
+  config.control_service_url = 'http://control:8380'
+  config.rating_service_url = 'http://rating:8480'
+  config.session_service_url = 'http://session:8680'
+  config.report_service_url = 'http://report:8780'
 end

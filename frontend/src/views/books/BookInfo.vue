@@ -27,9 +27,11 @@
           </div>
         </div>
         
-        <div class="rounded-full items-center flex pr-4">
+        <div class="rounded-full items-center flex pr-4" :title="can_find ? '' : 'Войдите, чтобы найти книгу в библиотеке'">
           <router-link class="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 rounded-md shadow-sm text-xl font-medium text-indigo-600 border border-indigo-400 hover:border-indigo-500 hover:text-indigo-700"
-            :to="{ name: 'BookLibraries', params: { book_uid: book_uid, book: book }}">
+            :to="{ name: 'BookLibraries', params: { book_uid: book_uid, book: book }}"
+            :disabled="!can_find"
+            :event="can_find ? 'click' : ''">
             Найти в библиотеках
           </router-link>
         </div>
@@ -52,7 +54,8 @@ export default {
       book: {
         type: Object
       },
-      error: ''
+      error: '',
+      can_find: false
     }
   },
   created () {
@@ -60,6 +63,7 @@ export default {
     this.$http.plain.get('/books/'+ this.book_uid)
       .then(response => { this.book = response.data; })
       .catch(error => this.setError(error, 'Что-то пошло не так... Попробуйте позже'))
+    this.can_find = localStorage.signedIn
   },
   methods: {
     setError (error, text) {

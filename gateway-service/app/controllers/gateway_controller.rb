@@ -1,4 +1,8 @@
 class GatewayController < ApplicationController
+  before_action :check_authorization, only: %i[find_book_in_libraries]
+  before_action :check_user_rights, only: %i[take_book return_book show_user_rating show_taken_books]
+  before_action :check_admin_rights, only: %i[add_book remove_book add_book_to_library remove_book_from_library show_books_genre_report show_books_return_report sign_up show_user_ratings]
+
   skip_before_action :verify_authenticity_token # fix!!!
 
   # GET /books/:book_uid
@@ -71,6 +75,13 @@ class GatewayController < ApplicationController
     render json: books, status: :ok
   end
 
+  # GET /library/:library_uid
+  def show_library_info
+    library = LibraryService.new.get_library_info(params[:library_uid])
+
+    render json: library, status: :ok
+  end
+
   # POST /library/:library_uid/book/:book_uid
   def add_book_to_library
     number = params[:number].to_i
@@ -88,7 +99,7 @@ class GatewayController < ApplicationController
 
   # POST /library/:library_uid/book/:book_uid/take
   def take_book
-    taken_book = LibraryService.new.take_book_from_library(params[:book_uid], params[:library_uid])
+    taken_book = GatewayService.new.take_book(@user_uid, params[:book_uid], params[:library_uid])
 
     render json: taken_book, status: :ok
   end
@@ -96,9 +107,16 @@ class GatewayController < ApplicationController
   # POST /library/:library_uid/book/:book_uid/return
   def return_book
     status = params[:status].to_s
-    LibraryService.new.return_book_to_library(params[:book_uid], params[:library_uid], status)
+    return_info = GatewayService.new.return_book_to_library(@user_uid, params[:book_uid], params[:library_uid], status)
 
-    head :ok
+    render json: return_info
+  end
+
+  # GET /library/user/books
+  def show_taken_books
+    taken_books = GatewayService.new.show_taken_books(@user_uid)
+
+    render json: taken_books
   end
 
   # GET /library/book/:book_uid
@@ -108,9 +126,71 @@ class GatewayController < ApplicationController
     render json: book_libraries, status: :ok
   end
 
+  # GET /rating/user
+  def show_user_rating
+    rating = GatewayService.new.show_user_rating(@user_uid)
+
+    render json: rating, status: :ok
+  end
+
+  # GET /reports/books-genre
+  def show_books_genre_report
+    report = GatewayService.new.show_books_genre_report
+
+    render json: report, status: :ok
+  end
+
+  # GET /reports/books-return
+  def show_books_return_report
+    token = request.headers['Authorization'].gsub(/^Bearer /, '')
+    report = GatewayService.new.show_books_return_report(token)
+
+    render json: report, status: :ok
+  end
+
+  # POST /sign-up
+  def sign_up
+    token = request.headers['Authorization'].gsub(/^Bearer /, '')
+    GatewayService.new.sign_up(token, params[:login], params[:password])
+
+    head :ok
+  end
+
+  # GET /users/rating
+  def show_user_ratings
+    token = request.headers['Authorization'].gsub(/^Bearer /, '')
+    user_ratings = GatewayService.new.show_user_ratings(token)
+
+    render json: user_ratings, status: :ok
+  end
+
   private
 
   def book_params
     params.permit(:name, :genre, { author: %i[first_name last_name middle_name] })
+  end
+
+  def check_authorization
+    Rails.logger.info 'Check authorization before API request'
+    command = AuthorizeApiRequest.call(request.headers)
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
+  end
+
+  def check_user_rights
+    Rails.logger.info 'Check user rights before API request'
+    command = AuthorizeApiRequest.call(request.headers, 'user')
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
+  end
+
+  def check_admin_rights
+    Rails.logger.info 'Check admin rights before API request'
+    command = AuthorizeApiRequest.call(request.headers, 'admin')
+    raise Error::NotAuthorized, command.errors[:message].first if !command.success?
+
+    @user_uid = command.result
   end
 end

@@ -7,10 +7,8 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'localhost:8980', '127.0.0.1:8980' # add frontend url for production
+    origins 'localhost:8980', '127.0.0.1:8980', '34.79.177.198', 'book-sea.ru'
 
-    resource '*',
-      headers: :any,
-      methods: %i[get post put patch delete options head]
+    resource '*', headers: :any, methods: %i[get post put patch delete options head]
   end
 end

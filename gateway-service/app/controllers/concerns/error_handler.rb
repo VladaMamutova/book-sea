@@ -4,6 +4,9 @@ module ErrorHandler
   included do
     rescue_from StandardError, RuntimeError, with: :internal_server_error
     rescue_from Error::RecordInvalid, with: :bad_request
+    rescue_from JWT::ExpiredSignature, with: :forbidden
+    rescue_from Error::RegistrationFailed, with: :unprocessable_entity
+    rescue_from Error::NotAuthorized, JWT::DecodeError, JWT::VerificationError, with: :unauthorized
 
     rescue_from RestClient::ExceptionWithResponse do |e|
       response = JSON.parse(e.response.body)
@@ -28,6 +31,10 @@ module ErrorHandler
   def bad_request(error)
     response = { message: error.message, details: error.details }
     render json: response, status: :bad_request # 400
+  end
+
+  def unauthorized(error)
+    render json: { message: error.message }, status: :unauthorized # 401
   end
 
   def forbidden(error)

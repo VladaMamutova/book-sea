@@ -1,4 +1,5 @@
 class Rating < ApplicationRecord
+  validates :user_uid, uniqueness: true
 
-  enum status: %i[bronze silver gold platinim]
+  belongs_to :status
 end

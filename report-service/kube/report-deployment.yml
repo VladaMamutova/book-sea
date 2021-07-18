@@ -35,9 +35,22 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 1
+          envFrom:
+            - configMapRef:
+                name: report-postgres-config
           env:
           - name: RAILS_MASTER_KEY
             valueFrom:
               secretKeyRef:
                 name: report-secrets
                 key: rails-master-key
+          - name: RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-report-secrets
+                key: username
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-report-secrets
+                key: password

@@ -57,4 +57,6 @@ Rails.application.configure do
 
   # allow to access service url
   config.hosts << 'report'
+
+  config.books_service_url = 'http://books:8180'
 end

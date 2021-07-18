@@ -18,6 +18,16 @@
 			"enabled": true
 		},
 		{
+			"key": "control_url",
+			"value": "http://34.140.132.99",
+			"enabled": true
+		},
+		{
+			"key": "rating_url",
+			"value": "http://35.241.208.172",
+			"enabled": true
+		},
+		{
 			"key": "gateway_url",
 			"value": "http://34.76.150.43/",
 			"enabled": true
@@ -25,6 +35,11 @@
 		{
 			"key": "session_url",
 			"value": "http://104.199.20.46/",
+			"enabled": true
+		},
+		{
+			"key": "report_url",
+			"value": "http://34.76.185.153",
 			"enabled": true
 		},
 		{
@@ -44,16 +59,26 @@
 		},
 		{
 			"key": "user_uid",
-			"value": "362c5679-48b8-4741-9dc1-44a7472f51f3",
+			"value": "6ec353f7-470d-4e00-9621-71f8c5bea45d",
+			"enabled": true
+		},
+		{
+			"key": "taken_book_uid",
+			"value": "a11b33b7-4260-4b62-b3ee-7b757ff0e8a4",
 			"enabled": true
 		},
 		{
 			"key": "admin_token",
 			"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3VpZCI6ImI5YjY1OTk3LWFjMjctNDg1MS1iMTMyLWY0NGIwNWY3ZmRiYSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTYyNDIwMjQ5MH0.BhqtVwWeQdWHqpxq9DhWh-cXf_q0aXi6XvDJQbIcD90\n",
 			"enabled": true
+		},
+		{
+			"key": "user_token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3VpZCI6Ijc1ZTkzMjhkLTkyZGQtNDFlZS05MzY3LThmZDdmNzEzODZhMiIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNjI1MzI5MTgxfQ.7wlrEl63Z9pX_pTlfL9Mo35wu2YKbLB5Z6IDXhz-AU8",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2021-07-03T05:11:59.475Z",
+	"_postman_exported_at": "2021-07-18T13:05:29.603Z",
 	"_postman_exported_using": "Postman/7.36.5"
 }

@@ -1,6 +1,21 @@
 # Add your own tasks in files placed in lib/tasks ending in .rake,
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
-require_relative "config/application"
+# Запуск задач в rails console:
+# rake sneakers:run
+
+# Запуск задач в фоновом режиме и запись лога в файл "public/rake.out":
+# nohup bundle exec rake sneakers:run --trace > public/rake.out 2>&1 &
+
+# Вывод лога:
+# tail -f public/rake.out
+
+# Остановка задачи, запущенной в фоне:
+# ps -df
+# kill <pid>
+
+require_relative 'config/application'
+
+require 'sneakers/tasks'
 
 Rails.application.load_tasks
