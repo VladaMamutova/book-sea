@@ -177,10 +177,18 @@ class GatewayService
     begin
       Rails.logger.info "Request to Control Service to add taken book '#{taken_book['taken_book_uid']}' for user '#{user_uid}'"
       ControlService.new.add_taken_book(user_uid, taken_book['taken_book_uid'])
+
+      Rails.logger.info "Publish taken book '#{taken_book['taken_book_uid']}' info to taken_books queue"
+      begin
+        Publisher.publish('taken_books', taken_book)
+      rescue StandardError => e
+        Rails.logger.error "Error: #{e.message}"
+      end
+
       taken_book
     rescue StandardError => e
-      Rails.logger.info "Error: #{e.message}"
-      Rails.logger.info "Request to Library Service to remove taken book '#{taken_book['taken_book_uid']}'"
+      Rails.logger.error "Error: #{e.message}"
+      Rails.logger.error "Request to Library Service to remove taken book '#{taken_book['taken_book_uid']}'"
       LibraryService.new.remove_taken_book(taken_book['taken_book_uid'])
       raise e
     end
@@ -199,9 +207,17 @@ class GatewayService
     begin
       Rails.logger.info "Request to Control Service to remove taken book '#{returned_book['taken_book_uid']}' for user '#{user_uid}'"
       ControlService.new.remove_taken_book(user_uid, returned_book['taken_book_uid'])
+
+      Rails.logger.info "Publish returned book '#{returned_book['taken_book_uid']}' info to returned_books queue"
+      begin
+        Publisher.publish('returned_books', return_info)
+      rescue StandardError => e
+        Rails.logger.error "Error: #{e.message}"
+      end
+
     rescue StandardError => e
-      Rails.logger.info "Error: #{e.message}"
-      Rails.logger.info "Request to Library Service to cancel return of taken book '#{returned_book['taken_book_uid']}'"
+      Rails.logger.error "Error: #{e.message}"
+      Rails.logger.error "Request to Library Service to cancel return of taken book '#{returned_book['taken_book_uid']}'"
       LibraryService.new.cancel_return(returned_book['taken_book_uid'])
       raise e
     end

@@ -47,10 +47,10 @@ spec:
           - name: RABBITMQ_USERNAME
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-secrets
+                name: rabbitmq-report-secrets
                 key: username
           - name: RABBITMQ_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: rabbitmq-secrets
+                name: rabbitmq-report-secrets
                 key: password

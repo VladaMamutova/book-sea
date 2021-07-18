@@ -46,3 +46,13 @@ spec:
               secretKeyRef:
                 name: gateway-secrets
                 key: session-key
+          - name: RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-gateway-secrets
+                key: username
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-gateway-secrets
+                key: password

@@ -15,9 +15,6 @@ class TakenBookService
       )
       library_book.update(available_count: available_count - 1)
 
-      Rails.logger.info "Publish taken book '#{taken_book.taken_book_uid}' info to taken_books queue"
-      Publisher.publish('taken_books', TakenBookSerializer.new(taken_book))
-
       taken_book
     end
   end
@@ -39,14 +36,10 @@ class TakenBookService
 
       return_info = {
         taken_book_uid: taken_book.taken_book_uid,
-        take_date: taken_book.created_at.strftime('%d.%m.%Y в %H:%M'),
         return_date: taken_book.updated_at.strftime('%d.%m.%Y в %H:%M'),
         status: taken_book.status,
         in_time: (taken_book.updated_at.to_date - taken_book.created_at.to_date).to_i <= RENTAL_PERIOD
       }
-
-      Rails.logger.info "Publish returned book '#{taken_book.taken_book_uid}' info to returned_books queue"
-      Publisher.publish('returned_books', return_info)
 
       return_info
     end
