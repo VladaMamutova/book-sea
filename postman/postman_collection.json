@@ -976,9 +976,9 @@
 									"    pm.expect(response.user_uid).to.eq(user_uid)",
 									"    pm.expect(response.library_uid).to.eq(library_uid)",
 									"    pm.expect(response.book_uid).to.eq(book_uid)",
-									"    pm.expect(response.status).to.eq(\"new\")",
 									"    pm.expect(response.take_date).to.not.empty",
-									"    ",
+									"    pm.expect(response.status).to.eq(\"new\")",
+									"",
 									"    pm.environment.set(\"taken_book_uid\", response.taken_book_uid)",
 									"})"
 								],
@@ -1100,10 +1100,9 @@
 									"",
 									"    const response = pm.response.json();",
 									"    pm.expect(response.taken_book_uid).to.not.empty",
-									"    pm.expect(response.status).to.eq(\"used\")",
-									"    pm.expect(response.take_date).to.not.empty",
 									"    pm.expect(response.return_date).to.not.empty",
 									"    pm.expect(response.in_time).to.eq(true)",
+									"    pm.expect(response.status).to.eq(\"used\")",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1696,9 +1695,9 @@
 									"    ",
 									"    const jsonData = response.json();",
 									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData.length).to.greaterThan(-1)",
+									"    pm.expect(jsonData.length).to.greaterThan(0)",
 									"    const taken_book_uid = pm.variables.get(\"taken_book_uid\")",
-									"    pm.expect(jsonData[jsonData.length -1]).to.eq(taken_book_uid)",
+									"    pm.expect(jsonData[jsonData.length - 1]).to.eq(taken_book_uid)",
 									"})"
 								],
 								"type": "text/javascript"
@@ -1786,7 +1785,7 @@
 									"    const response = pm.response.json();",
 									"    pm.expect(response.status).to.not.empty",
 									"    pm.expect(response.limit).to.greaterThan(0)",
-									"    pm.expect(response.score).to.greaterThan(0)",
+									"    pm.expect(response.score).to.greaterThan(-1)",
 									"})",
 									""
 								],
@@ -1839,8 +1838,6 @@
 									"",
 									"    const jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData[0].genre).to.not.empty",
-									"    pm.expect(jsonData[0].book_count).to.greaterThan(0)",
 									"})",
 									""
 								],
@@ -1876,13 +1873,7 @@
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
 									"    const jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.be.an(\"array\");",
-									"    pm.expect(jsonData[0].user_uid).to.not.empty",
-									"    pm.expect(jsonData[0].in_time_count).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].lost).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].bad_condition).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].new).to.greaterThan(-1)",
-									"    pm.expect(jsonData[0].count_all).to.greaterThan(-1)    ",
+									"    pm.expect(jsonData).to.be.an(\"array\");  ",
 									"})",
 									""
 								],
@@ -2465,8 +2456,8 @@
 									"    pm.expect(response.user_uid).to.eq(user_uid)",
 									"    pm.expect(response.library_uid).to.eq(library_uid)",
 									"    pm.expect(response.book_uid).to.eq(book_uid)",
-									"    pm.expect(response.status).to.eq(\"new\")",
 									"    pm.expect(response.take_date).to.not.empty",
+									"    pm.expect(response.status).to.eq(\"new\")",
 									"",
 									"    pm.environment.set(\"taken_book_uid\", response.taken_book_uid)",
 									"})"
@@ -2520,7 +2511,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Shiw user taken books\", function() {",
+									"pm.test(\"Show user taken books\", function() {",
 									"    pm.response.to.have.status(200)",
 									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");",
 									"",
@@ -2528,6 +2519,7 @@
 									"    pm.expect(response).to.be.an(\"array\");",
 									"    pm.expect(response.length).to.greaterThan(0)",
 									"    pm.expect(response[0].taken_book_uid).to.not.empty",
+									"    pm.expect(response[0].take_date).to.not.empty",
 									"    pm.expect(response[0].book_uid).to.not.empty",
 									"    pm.expect(response[0].library_uid).to.not.empty",
 									"})"
@@ -2597,9 +2589,9 @@
 									"",
 									"    const response = pm.response.json();",
 									"    pm.expect(response.taken_book_uid).to.not.empty",
-									"    pm.expect(response.status).to.eq(\"used\"),",
 									"    pm.expect(response.return_date).to.not.empty",
 									"    pm.expect(response.in_time).to.eq(true)",
+									"    pm.expect(response.status).to.eq(\"used\")",
 									"",
 									"    pm.expect(response.rating_status).to.not.empty",
 									"    pm.expect(response.rating_score).to.greaterThan(-1)",
