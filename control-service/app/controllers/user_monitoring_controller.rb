@@ -36,7 +36,7 @@ class UserMonitoringController < ApplicationController
 
   # PATCH /control/user/:user_uid
   def update_limit
-    @user_monitoring.update!(limit: params[limit].to_i)
+    @user_monitoring.update!(limit: params[:limit].to_i)
 
     head :ok
   end
