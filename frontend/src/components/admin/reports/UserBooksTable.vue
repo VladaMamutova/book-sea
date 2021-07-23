@@ -1,4 +1,7 @@
 <template>
+  <div class="min-w-max w-full">
+    <div class="text-red-500 text-base text-lg text-center mt-6 pb-4" v-if="error">{{ error }}</div>
+
     <table class="min-w-max w-full table-auto">
       <thead style="outline: 4px solid transparent;">
         <tr class="bg-gray-200 text-gray-500 uppercase text-md leading-normal">
@@ -42,6 +45,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
 </template>
 
 <script>

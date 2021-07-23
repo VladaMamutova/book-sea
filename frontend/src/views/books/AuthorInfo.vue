@@ -5,7 +5,7 @@
       <div v-if="!error" class="flex-row justify-center space-y-6 rounded-lg px-24 py-12 border border-gray-200">
     
       <h1 class="text-3xl font-bold text-black text-center">
-        {{ author.last_name }} {{ author.first_name }} {{ author.middle_name }}
+        {{ author.first_name }} {{ author.middle_name }} {{ author.last_name }}
       </h1>
 
       <div class="flex-wrap text-xl text-gray-700 font-normal text-center">

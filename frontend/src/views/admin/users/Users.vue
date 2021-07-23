@@ -5,8 +5,7 @@
 
         <div class="group block rounded-lg px-16 py-8 border border-gray-200 shadow">
           <h1 class="text-3xl font-bold text-gray-900 text-center">Регистрация пользователя</h1>
-          <div class="text-red-500 text-base text-lg text-center mt-6" v-if="error">{{ error }}</div
-          >
+          <div class="text-red-500 text-base text-lg text-center mt-6" v-if="error">{{ error }}</div>
           <form @submit.prevent="signUp" class="flex justify-center space-x-6 m-8">
             <div class="flex-grow h-16">
               <label for="login" class="text-gray-600 text-lg font-normal text-center">Логин</label>
@@ -104,7 +103,7 @@ export default {
     signUp () {
       if (this.password === this.password_confirmation) {
         this.$http.secured.post('/sign-up', { login: this.login, password: this.password })
-          .then(this.signUpSuccessful())
+          .then(response => {this.signUpSuccessful()})
           .catch(error => this.signUpFailed(error))
       }
     },
@@ -115,7 +114,7 @@ export default {
     signUpFailed (error) {
       this.error = (error.response && error.response.data && error.response.data.message) || 'Не удалось создать новый аккаунт. Пожалуйста, повторите позже'
       if (error.response.data.details) {
-        this.add_error += '. Details: ' + error.response.data.details
+        this.error += '. Details: ' + error.response.data.details
       }
     }
   }

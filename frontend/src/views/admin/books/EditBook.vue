@@ -15,7 +15,7 @@
             Автор:
             <router-link class="text-gray-700 hover:text-gray-900"
               :to="{ name: 'AuthorInfo', params: { author_uid: book.author.author_uid }}">
-              {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+              {{ book.author.first_name }} {{ book.author.middle_name }} {{ book.author.last_name }}
             </router-link>
           </div>
 
@@ -137,7 +137,7 @@ export default {
       this.add_info = ''
       this.add_error = 'Не удалось добавить книгу в библиотеку'
       if (error.response && error.response.data && error.response.data.message) {
-        this.add_error += '. ' + error.response && error.response.data && error.response.data.message
+        this.add_error += '. ' + error.response.data.message
         if (error.response.data.details) {
           this.add_error += '. Details: ' + error.response.data.details
         }
@@ -147,7 +147,7 @@ export default {
       this.remove_info = ''
       this.remove_error = 'Не удалось удалить книгу из библиотеки'
       if (error.response && error.response.data && error.response.data.message)
-        this.remove_error += '. Не удалось удалить книгу из библиотеки'
+         this.remove_error += '. ' + error.response.data.message
     },
     getBookAvailableCount(library_uid) {
       let library_index = this.book_libraries.findIndex(book_library => book_library.library.library_uid === library_uid)
