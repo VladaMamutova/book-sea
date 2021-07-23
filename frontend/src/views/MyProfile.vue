@@ -16,7 +16,7 @@
             Рейтинг: <span class="text-yellow-600 font-medium uppercase"> {{ rating.status }} </span>
           
           <span v-if="rating" class="flex-wrap text-xl text-gray-500 font-normal">
-            (<span > {{ rating.score }} </span> баллов)
+            (<span>{{ rating.score }} </span> баллов)
           </span>
           </div>
           <div v-if="rating" class="flex-wrap text-xl text-gray-500 font-normal">

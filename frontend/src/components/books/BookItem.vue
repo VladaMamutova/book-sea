@@ -18,7 +18,7 @@
           Автор: 
           <router-link class="text-gray-700 hover:text-gray-900"
             :to="{ name: 'AuthorInfo', params: { author_uid: book.author.author_uid }}">
-            {{ book.author.last_name }} {{ book.author.first_name }} {{ book.author.middle_name }}
+            {{ book.author.first_name }} {{ book.author.middle_name }} {{ book.author.last_name }}
           </router-link>
         </div>
 

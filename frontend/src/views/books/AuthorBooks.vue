@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto item-center px-16 py-6">
     <h1 class="text-3xl font-bold text-black text-center">
-      {{ author.last_name }} {{ author.first_name }} {{ author.middle_name }}
+      {{ author.first_name }} {{ author.middle_name }} {{ author.last_name }}
     </h1>
 
     <div class="flex-wrap text-xl mt-6 text-gray-700 font-normal text-center">
